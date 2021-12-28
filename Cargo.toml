@@ -1,7 +1,5 @@
-[package]
-name = "bytey"
-version = "0.0.0"
-edition = "2021"
-description = "Work in progress"
+[workspace]
 
-[dependencies]
+members = [
+    "bytey"
+]

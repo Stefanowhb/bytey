@@ -21,9 +21,9 @@ impl ByteBuffer {
 	///
 	/// [LLVM documentation](https://llvm.org/docs/GetElementPtr.html)
 	///
-	const MAX_SIZE: usize = isize::MAX as usize;
+	pub const MAX_SIZE: usize = isize::MAX as usize;
 	// TODO: Add configs to change MIN_SIZE depending on compile target, e.g. the smallest chunk windows 10 64-bit allocates is 24 bytes
-	const MIN_SIZE: usize = 8;
+	pub const MIN_SIZE: usize = 8;
 
 	pub fn new() -> Result<Self> {
 		Self::with_capacity(Self::MIN_SIZE)

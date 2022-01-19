@@ -97,7 +97,7 @@ impl ByteBuffer {
 	}
 
 	pub fn shrink(&mut self, amount: usize) -> Result<&mut Self> {
-		self.resize(self.layout.size().checked_sub(amount).ok_or(ByteBufferError::MaxCapacity)?)
+		self.resize(self.layout.size().checked_sub(amount).ok_or(ByteBufferError::MinCapacity)?)
 	}
 
 	pub unsafe fn write_slice_unchecked(&mut self, source: &[u8]) -> &mut Self {

@@ -1,9 +1,13 @@
 [package]
 name = "bytey_byte_buffer"
+homepage = "https://github.com/Stefanowhb/bytey"
+repository = "https://github.com/Stefanowhb/bytey"
 version = "0.1.0"
 edition = "2021"
+keywords = ["buffers", "io", "utility", "byte", "endian", "big-endian", "little-endian"]
+categories = ["data-structures", "encoding", "network-programming"]
+license = "MIT"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 thiserror = "1.0.30"

@@ -56,3 +56,6 @@ pub use bytey_byte_buffer::byte_buffer_write::ByteBufferWrite;
 
 #[doc(inline)]
 pub use bytey_byte_buffer::byte_buffer_read::ByteBufferRead;
+
+#[doc(inline)]
+pub use bytey_byte_buffer::serde_bincode::{self, Decode, Encode};

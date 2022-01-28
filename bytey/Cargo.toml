@@ -10,5 +10,9 @@ keywords = ["buffers", "io", "utility", "byte", "endian"]
 categories = ["data-structures", "encoding", "network-programming"]
 license = "MIT"
 
+[features]
+default = ["serde_bincode"]
+serde_bincode = ["bytey_byte_buffer/bincode"]
+
 [dependencies]
 bytey_byte_buffer = { path = "../bytey_byte_buffer", version = "0.1.1" }

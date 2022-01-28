@@ -20,4 +20,7 @@ pub enum ByteBufferError {
         start: usize,
         end: usize,
     },
+
+    #[error("Other Error: {error}")]
+    OtherError { error: String },
 }

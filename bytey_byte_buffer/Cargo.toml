@@ -9,7 +9,16 @@ keywords = ["buffers", "io", "utility", "byte", "endian"]
 categories = ["data-structures", "encoding", "network-programming"]
 license = "MIT"
 
+[features]
+default = ["serde_bincode"]
+serde_bincode = ["bincode"]
 
 [dependencies]
 thiserror = "1.0.30"
 cfg-if = "1.0.0"
+bincode = { version = "2.0.0-beta.2", optional = true, features = ["serde"] }
+
+[[test]]
+name = "Bincode"
+path = "tests/bincode/test.rs"
+required-features = ["serde_bincode"]

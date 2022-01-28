@@ -9,7 +9,7 @@
 //! ```
 //! # Usage
 //!```
-//! use bytey::byte_buffer::ByteBuffer;
+//! use bytey::ByteBuffer;
 //!
 //! fn main() {
 //!     let mut buffer = ByteBuffer::new().unwrap();
@@ -19,7 +19,7 @@
 //!     let value3: usize = usize::MAX;
 //!
 //!     // The buffer will resize itself to fit all the values
-//!     buffer.write(&value);
+//!     buffer.write(&value1);
 //!     buffer.write(&value2);
 //!     buffer.write(&value3);
 //!
@@ -27,10 +27,10 @@
 //!     // So if we want to read the values we just put in, we have to move it back to 0
 //!     buffer.move_cursor(0);
 //!
-//!     // Read and print the values stores inside the buffer
-//!     println!("{}", buffer.read::<u16>());
-//!     println!("{}", buffer.read::<i32>());
-//!     println!("{}", buffer.read::<usize>());
+//!     // Read and print the values stored inside the buffer
+//!     println!("{}", buffer.read::<u16>().unwrap());
+//!     println!("{}", buffer.read::<i32>().unwrap());
+//!     println!("{}", buffer.read::<usize>().unwrap());
 //! }
 //! ```
 //! Any value written to the ByteBuffer will have to implement the ``ByteBufferWrite`` trait.

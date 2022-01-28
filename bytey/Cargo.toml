@@ -6,7 +6,7 @@ version = "0.1.0"
 edition = "2021"
 description = "Bytey provides a convenient and easy to use byte storage"
 readme = "../README.md"
-keywords = ["buffers", "io", "utility", "byte", "endian", "big-endian", "little-endian"]
+keywords = ["buffers", "io", "utility", "byte", "endian"]
 categories = ["data-structures", "encoding", "network-programming"]
 license = "MIT"
 

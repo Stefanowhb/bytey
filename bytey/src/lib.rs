@@ -1,3 +1,4 @@
+#![allow(clippy::needless_doctest_main)]
 //! # Bytey
 //! Bytey provides a convenient and easy to use byte storage.
 //! # Installation

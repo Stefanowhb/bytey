@@ -2,7 +2,7 @@
 name = "bytey_byte_buffer"
 homepage = "https://github.com/Stefanowhb/bytey"
 repository = "https://github.com/Stefanowhb/bytey"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Bytey ByteBuffer code, use Bytey instead"
 keywords = ["buffers", "io", "utility", "byte", "endian"]

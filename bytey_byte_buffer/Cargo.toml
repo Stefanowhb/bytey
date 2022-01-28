@@ -10,7 +10,6 @@ categories = ["data-structures", "encoding", "network-programming"]
 license = "MIT"
 
 [features]
-default = ["serde_bincode"]
 serde_bincode = ["bincode"]
 
 [dependencies]

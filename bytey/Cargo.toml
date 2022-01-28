@@ -11,4 +11,4 @@ categories = ["data-structures", "encoding", "network-programming"]
 license = "MIT"
 
 [dependencies]
-bytey_byte_buffer = {path = "../bytey_byte_buffer", version = "0.1.0"}
+bytey_byte_buffer = { path = "../bytey_byte_buffer", version = "0.1.0" }

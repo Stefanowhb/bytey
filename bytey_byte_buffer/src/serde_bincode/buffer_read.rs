@@ -5,6 +5,39 @@ use crate::{
 };
 
 impl ByteBuffer {
+    /// Reads a serialized value of type T that implements the [`bincode::Decode`] trait from the buffer.
+    ///
+    /// # Errors & Behaviour
+    /// See [`read_slice`](Self::read_slice).
+    /// See [`decode_from_slice`](bincode::decode_from_slice).
+    ///
+    /// # Examples
+    /// ```
+    /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
+    /// use bytey_byte_buffer::bincode::{self, Decode, Encode};
+    ///
+    /// #[derive(PartialEq, Decode, Encode, Debug)]
+    /// struct TestData {
+    ///     x: u32,
+    ///     y: u64,
+    ///     i: f32,
+    /// }
+    ///
+    /// let mut buffer = ByteBuffer::new().unwrap();
+    /// let value = TestData {
+    ///     x: 5,
+    ///     y: 10,
+    ///     i: 5.5,
+    /// };
+    ///
+    /// buffer.encode(&value);
+    /// buffer.move_cursor(0);
+    ///
+    /// println!("{:?}", buffer.decode::<TestData>().unwrap());
+    /// buffer.move_cursor(0);
+    ///
+    /// let value: TestData = buffer.decode().unwrap();
+    /// ```
     pub fn decode<T>(&mut self) -> Result<T>
     where
         T: Decode,
@@ -22,6 +55,39 @@ impl ByteBuffer {
         Ok(decoded)
     }
 
+    /// Reads a serialized value of type T that implements the [`bincode::Decode`] trait from the buffer in **little endian** ordering.
+    ///
+    /// # Errors & Behaviour
+    /// See [`read_slice`](Self::read_slice).
+    /// See [`decode_from_slice`](bincode::decode_from_slice).
+    ///
+    /// # Examples
+    /// ```
+    /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
+    /// use bytey_byte_buffer::bincode::{self, Decode, Encode};
+    ///
+    /// #[derive(PartialEq, Decode, Encode, Debug)]
+    /// struct TestData {
+    ///     x: u32,
+    ///     y: u64,
+    ///     i: f32,
+    /// }
+    ///
+    /// let mut buffer = ByteBuffer::new().unwrap();
+    /// let value = TestData {
+    ///     x: 5,
+    ///     y: 10,
+    ///     i: 5.5,
+    /// };
+    ///
+    /// buffer.encode_le(&value);
+    /// buffer.move_cursor(0);
+    ///
+    /// println!("{:?}", buffer.decode_le::<TestData>().unwrap());
+    /// buffer.move_cursor(0);
+    ///
+    /// let value: TestData = buffer.decode_le().unwrap();
+    /// ```
     pub fn decode_le<T>(&mut self) -> Result<T>
     where
         T: Decode,
@@ -38,6 +104,39 @@ impl ByteBuffer {
         Ok(decoded)
     }
 
+    /// Reads a serialized value of type T that implements the [`bincode::Decode`] trait from the buffer in **big endian** ordering.
+    ///
+    /// # Errors & Behaviour
+    /// See [`read_slice`](Self::read_slice).
+    /// See [`decode_from_slice`](bincode::decode_from_slice).
+    ///
+    /// # Examples
+    /// ```
+    /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
+    /// use bytey_byte_buffer::bincode::{self, Decode, Encode};
+    ///
+    /// #[derive(PartialEq, Decode, Encode, Debug)]
+    /// struct TestData {
+    ///     x: u32,
+    ///     y: u64,
+    ///     i: f32,
+    /// }
+    ///
+    /// let mut buffer = ByteBuffer::new().unwrap();
+    /// let value = TestData {
+    ///     x: 5,
+    ///     y: 10,
+    ///     i: 5.5,
+    /// };
+    ///
+    /// buffer.encode_be(&value);
+    /// buffer.move_cursor(0);
+    ///
+    /// println!("{:?}", buffer.decode_be::<TestData>().unwrap());
+    /// buffer.move_cursor(0);
+    ///
+    /// let value: TestData = buffer.decode_be().unwrap();
+    /// ```
     pub fn decode_be<T>(&mut self) -> Result<T>
     where
         T: Decode,

@@ -4,6 +4,7 @@ homepage = "https://github.com/Stefanowhb/bytey"
 repository = "https://github.com/Stefanowhb/bytey"
 version = "0.1.0"
 edition = "2021"
+description = "Bytey ByteBuffer code, use Bytey instead"
 keywords = ["buffers", "io", "utility", "byte", "endian"]
 categories = ["data-structures", "encoding", "network-programming"]
 license = "MIT"

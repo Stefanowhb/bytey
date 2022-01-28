@@ -15,7 +15,7 @@ serde_bincode = ["bincode"]
 [dependencies]
 thiserror = "1.0.30"
 cfg-if = "1.0.0"
-bincode = { version = "2.0.0-beta.2", optional = true, features = ["serde"] }
+bincode = { version = "2.0.0-beta.2", optional = true }
 
 [[test]]
 name = "bincode"

@@ -2,7 +2,7 @@
 name = "bytey"
 homepage = "https://github.com/Stefanowhb/bytey"
 repository = "https://github.com/Stefanowhb/bytey"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Bytey provides a convenient and easy to use byte storage"
 readme = "../README.md"
@@ -11,4 +11,4 @@ categories = ["data-structures", "encoding", "network-programming"]
 license = "MIT"
 
 [dependencies]
-bytey_byte_buffer = { path = "../bytey_byte_buffer", version = "0.1.0" }
+bytey_byte_buffer = { path = "../bytey_byte_buffer", version = "0.1.1" }

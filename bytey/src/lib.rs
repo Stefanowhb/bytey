@@ -56,7 +56,3 @@ pub use bytey_byte_buffer::byte_buffer_write::ByteBufferWrite;
 
 #[doc(inline)]
 pub use bytey_byte_buffer::byte_buffer_read::ByteBufferRead;
-
-#[doc(inline)]
-#[cfg(feature = "bincode_serialize")]
-pub use bytey_byte_buffer::{buffer_read, buffer_write};

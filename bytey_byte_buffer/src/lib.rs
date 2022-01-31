@@ -7,4 +7,4 @@ pub mod error;
 mod bincode_serialize;
 
 #[cfg(feature = "bincode_serialize")]
-pub use bincode_serialize::{buffer_read, buffer_write};
+pub use bincode_serialize::*;

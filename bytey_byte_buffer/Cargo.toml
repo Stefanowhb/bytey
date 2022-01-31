@@ -10,7 +10,7 @@ categories = ["data-structures", "encoding", "network-programming"]
 license = "MIT"
 
 [features]
-serde_bincode = ["bincode"]
+bincode_serialize = ["bincode"]
 
 [dependencies]
 thiserror = "1.0.30"
@@ -20,4 +20,4 @@ bincode = { version = "2.0.0-beta.2", optional = true }
 [[test]]
 name = "bincode"
 path = "tests/bincode/test.rs"
-required-features = ["serde_bincode"]
+required-features = ["bincode_serialize"]

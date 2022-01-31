@@ -1,5 +1,5 @@
+use bytey_byte_buffer::bincode::{Decode, Encode};
 use bytey_byte_buffer::byte_buffer::ByteBuffer;
-use bytey_byte_buffer::serde_bincode::{Decode, Encode};
 
 #[derive(PartialEq, Decode, Encode, Debug)]
 struct TestData {

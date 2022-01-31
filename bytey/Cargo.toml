@@ -11,7 +11,7 @@ categories = ["data-structures", "encoding", "network-programming"]
 license = "MIT"
 
 [features]
-serde_bincode = ["bytey_byte_buffer/serde_bincode"]
+bincode_serialize = ["bytey_byte_buffer/bincode_serialize"]
 
 [dependencies]
 bytey_byte_buffer = { path = "../bytey_byte_buffer", version = "0.1.1" }

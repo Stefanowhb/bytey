@@ -3,5 +3,5 @@ pub mod byte_buffer_read;
 pub mod byte_buffer_write;
 pub mod error;
 
-#[cfg(feature = "serde_bincode")]
-pub mod serde_bincode;
+#[cfg(feature = "bincode_serialize")]
+pub mod bincode;

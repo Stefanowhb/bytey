@@ -1,10 +1,22 @@
-use crate::{
+use bincode::Decode;
+use bytey_byte_buffer::{
     byte_buffer::ByteBuffer,
     error::{ByteBufferError, Result},
 };
-use bincode::Decode;
 
-impl ByteBuffer {
+pub trait BincodeDecode {
+    fn decode<T>(&mut self) -> Result<T>
+    where
+        T: Decode;
+    fn decode_le<T>(&mut self) -> Result<T>
+    where
+        T: Decode;
+    fn decode_be<T>(&mut self) -> Result<T>
+    where
+        T: Decode;
+}
+
+impl BincodeDecode for ByteBuffer {
     /// Reads a serialized value of type T that implements the [`bincode::Decode`] trait from the buffer.
     ///
     /// # Errors & Behaviour
@@ -14,7 +26,8 @@ impl ByteBuffer {
     /// # Examples
     /// ```
     /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
-    /// use bytey_byte_buffer::bincode::{self, Decode, Encode};
+    /// use bincode::{self, Decode, Encode};
+    /// use bytey_bincode::*;
     ///
     /// #[derive(PartialEq, Decode, Encode, Debug)]
     /// struct TestData {
@@ -38,7 +51,7 @@ impl ByteBuffer {
     ///
     /// let value: TestData = buffer.decode().unwrap();
     /// ```
-    pub fn decode<T>(&mut self) -> Result<T>
+    fn decode<T>(&mut self) -> Result<T>
     where
         T: Decode,
     {
@@ -64,7 +77,8 @@ impl ByteBuffer {
     /// # Examples
     /// ```
     /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
-    /// use bytey_byte_buffer::bincode::{self, Decode, Encode};
+    /// use bincode::{self, Decode, Encode};
+    /// use bytey_bincode::*;
     ///
     /// #[derive(PartialEq, Decode, Encode, Debug)]
     /// struct TestData {
@@ -88,7 +102,7 @@ impl ByteBuffer {
     ///
     /// let value: TestData = buffer.decode_le().unwrap();
     /// ```
-    pub fn decode_le<T>(&mut self) -> Result<T>
+    fn decode_le<T>(&mut self) -> Result<T>
     where
         T: Decode,
     {
@@ -113,7 +127,8 @@ impl ByteBuffer {
     /// # Examples
     /// ```
     /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
-    /// use bytey_byte_buffer::bincode::{self, Decode, Encode};
+    /// use bincode::{self, Decode, Encode};
+    /// use bytey_bincode::*;
     ///
     /// #[derive(PartialEq, Decode, Encode, Debug)]
     /// struct TestData {
@@ -137,7 +152,7 @@ impl ByteBuffer {
     ///
     /// let value: TestData = buffer.decode_be().unwrap();
     /// ```
-    pub fn decode_be<T>(&mut self) -> Result<T>
+    fn decode_be<T>(&mut self) -> Result<T>
     where
         T: Decode,
     {

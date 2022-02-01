@@ -1,6 +1,3 @@
 [workspace]
 
-members = [
-    "bytey",
-    "bytey_byte_buffer"
-]
+members = ["bytey", "bytey_byte_buffer", "bytey_bincode"]

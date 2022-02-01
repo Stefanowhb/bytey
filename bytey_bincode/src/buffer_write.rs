@@ -1,10 +1,22 @@
-use crate::{
+use bincode::Encode;
+use bytey_byte_buffer::{
     byte_buffer::ByteBuffer,
     error::{ByteBufferError, Result},
 };
-use bincode::Encode;
 
-impl ByteBuffer {
+pub trait BincodeEncode {
+    fn encode<T>(&mut self, source: T) -> Result<&mut Self>
+    where
+        T: Encode;
+    fn encode_le<T>(&mut self, source: T) -> Result<&mut Self>
+    where
+        T: Encode;
+    fn encode_be<T>(&mut self, source: T) -> Result<&mut Self>
+    where
+        T: Encode;
+}
+
+impl BincodeEncode for ByteBuffer {
     /// Serializes and Writes the given value to the [`ByteBuffer`].
     ///
     /// The value has to implement the [`bincode::Encode`] trait.
@@ -16,7 +28,8 @@ impl ByteBuffer {
     /// # Examples
     /// ```
     /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
-    /// use bytey_byte_buffer::bincode::{self, Encode};
+    /// use bytey_bincode::*;
+    /// use bincode::{self, Encode};
     ///
     /// #[derive(PartialEq, Encode, Debug)]
     /// struct TestData {
@@ -34,7 +47,7 @@ impl ByteBuffer {
     ///
     /// buffer.encode(&value);
     /// ```
-    pub fn encode<T>(&mut self, source: T) -> Result<&mut Self>
+    fn encode<T>(&mut self, source: T) -> Result<&mut Self>
     where
         T: Encode,
     {
@@ -59,7 +72,8 @@ impl ByteBuffer {
     /// # Examples
     /// ```
     /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
-    /// use bytey_byte_buffer::bincode::{self, Encode};
+    /// use bytey_bincode::*;
+    /// use bincode::{self, Encode};
     ///
     /// #[derive(PartialEq, Encode, Debug)]
     /// struct TestData {
@@ -77,7 +91,7 @@ impl ByteBuffer {
     ///
     /// buffer.encode_le(&value);
     /// ```
-    pub fn encode_le<T>(&mut self, source: T) -> Result<&mut Self>
+    fn encode_le<T>(&mut self, source: T) -> Result<&mut Self>
     where
         T: Encode,
     {
@@ -102,7 +116,8 @@ impl ByteBuffer {
     /// # Examples
     /// ```
     /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
-    /// use bytey_byte_buffer::bincode::{self, Encode};
+    /// use bytey_bincode::*;
+    /// use bincode::{self, Encode};
     ///
     /// #[derive(PartialEq, Encode, Debug)]
     /// struct TestData {
@@ -120,7 +135,7 @@ impl ByteBuffer {
     ///
     /// buffer.encode_be(&value);
     /// ```
-    pub fn encode_be<T>(&mut self, source: T) -> Result<&mut Self>
+    fn encode_be<T>(&mut self, source: T) -> Result<&mut Self>
     where
         T: Encode,
     {

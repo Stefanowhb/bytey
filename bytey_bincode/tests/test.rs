@@ -1,4 +1,5 @@
 use bincode::{Decode, Encode};
+use bytey_bincode::{BincodeDecode, BincodeEncode};
 use bytey_byte_buffer::byte_buffer::ByteBuffer;
 
 #[derive(PartialEq, Decode, Encode, Debug)]

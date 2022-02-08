@@ -10,7 +10,7 @@ categories = ["data-structures", "encoding", "network-programming", "bincode"]
 license = "MIT"
 
 [dependencies]
-bytey_byte_buffer = { path = "../bytey_byte_buffer", version = "0.1.1" }
+bytey_byte_buffer = { path = "../bytey_byte_buffer", version = "0.2.0" }
 bincode = "2.0.0-beta.2"
 
 [[test]]

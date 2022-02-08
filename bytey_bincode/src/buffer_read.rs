@@ -106,7 +106,7 @@ impl BincodeDecode for ByteBuffer {
     where
         T: Decode,
     {
-        let size = self.read::<u64>()?;
+        let size = self.read_le::<u64>()?;
         let source = ByteBuffer::read_slice(self, size as usize)?;
 
         let (decoded, _): (T, usize) =
@@ -156,7 +156,7 @@ impl BincodeDecode for ByteBuffer {
     where
         T: Decode,
     {
-        let size = self.read::<u64>()?;
+        let size = self.read_be::<u64>()?;
         let source = ByteBuffer::read_slice(self, size as usize)?;
 
         let (decoded, _): (T, usize) =

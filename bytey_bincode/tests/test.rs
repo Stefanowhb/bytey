@@ -23,3 +23,33 @@ fn test_struct_writing_reading() {
     let new_value: TestData = buffer.decode().unwrap();
     assert_eq!(new_value, value);
 }
+
+#[test]
+fn test_struct_le_writing_reading() {
+    let mut buffer = ByteBuffer::with_capacity(std::mem::size_of::<TestData>()).unwrap();
+    let value = TestData {
+        x: 5,
+        y: 10,
+        i: 5.5,
+    };
+
+    let _ = buffer.encode_le(&value);
+    let _ = buffer.move_cursor(0);
+    let new_value: TestData = buffer.decode_le().unwrap();
+    assert_eq!(new_value, value);
+}
+
+#[test]
+fn test_struct_be_writing_reading() {
+    let mut buffer = ByteBuffer::with_capacity(std::mem::size_of::<TestData>()).unwrap();
+    let value = TestData {
+        x: 5,
+        y: 10,
+        i: 5.5,
+    };
+
+    let _ = buffer.encode_be(&value);
+    let _ = buffer.move_cursor(0);
+    let new_value: TestData = buffer.decode_be().unwrap();
+    assert_eq!(new_value, value);
+}

@@ -20,4 +20,10 @@ pub enum ByteBufferError {
         start: usize,
         end: usize,
     },
+
+    #[error("Length out of bounds: {new} >= {current}")]
+    LengthOutOfBounds { current: usize, new: usize },
+
+    #[error("Other Error: {error}")]
+    OtherError { error: String },
 }

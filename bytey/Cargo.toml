@@ -10,5 +10,9 @@ keywords = ["buffers", "io", "utility", "byte", "endian"]
 categories = ["data-structures", "encoding", "network-programming"]
 license = "MIT"
 
+[features]
+bincode_serialize = ["bytey_bincode"]
+
 [dependencies]
 bytey_byte_buffer = { path = "../bytey_byte_buffer", version = "0.1.1" }
+bytey_bincode = { path = "../bytey_bincode", version = "0.1.0", optional = true }

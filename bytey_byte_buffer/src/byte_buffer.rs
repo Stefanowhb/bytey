@@ -28,6 +28,7 @@ use crate::error::{ByteBufferError, Result};
 /// println!("The stored value is: {}!", buffer.read::<u32>().unwrap());
 /// ```
 ///
+#[derive(Debug)]
 pub struct ByteBuffer {
     layout: alloc::Layout,
     length: usize,
@@ -544,6 +545,43 @@ impl ByteBuffer {
         Ok(self)
     }
 
+    /// Resets length without resizing array.
+    ///
+    /// # Behaviour
+    /// buffer's length will be set to length and buffer's cursor will be set to length
+    /// if greater than length.
+    ///
+    /// # Errors
+    /// - [`ByteBufferError::LengthOutOfBounds`] is returned if length exceeds the buffer's length
+    ///
+    /// # Examples
+    /// ```
+    /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
+    ///
+    /// let mut buffer = ByteBuffer::new().unwrap();
+    /// let value: u32 = 12345;
+    ///
+    /// buffer.write(&value);
+    ///
+    /// let _ = buffer.truncate(0).unwrap();
+    /// ```
+    pub fn truncate(&mut self, length: usize) -> Result<&mut Self> {
+        if length > self.length {
+            return Err(ByteBufferError::LengthOutOfBounds {
+                current: self.length,
+                new: length,
+            });
+        }
+
+        self.length = length;
+
+        if self.cursor > length {
+            self.cursor = length;
+        }
+
+        Ok(self)
+    }
+
     /// Returns the length of the [`ByteBuffer`].
     ///
     /// The length of the buffer is the last index written to - 1.
@@ -636,6 +674,23 @@ impl Drop for ByteBuffer {
     fn drop(&mut self) {
         unsafe {
             alloc::dealloc(self.pointer, self.layout);
+        }
+    }
+}
+
+impl Clone for ByteBuffer {
+    fn clone(&self) -> Self {
+        let layout = self.layout;
+        let pointer = unsafe { alloc::alloc(layout) };
+        unsafe {
+            ptr::copy(self.pointer, pointer, self.length);
+        }
+
+        Self {
+            layout,
+            length: self.length,
+            cursor: self.cursor,
+            pointer,
         }
     }
 }

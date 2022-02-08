@@ -56,3 +56,7 @@ pub use bytey_byte_buffer::byte_buffer_write::ByteBufferWrite;
 
 #[doc(inline)]
 pub use bytey_byte_buffer::byte_buffer_read::ByteBufferRead;
+
+#[cfg(feature = "bincode_serialize")]
+#[cfg_attr(docsrs, doc(cfg(feature = "bincode_serialize")))]
+pub use bytey_bincode::*;

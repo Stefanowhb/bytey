@@ -55,6 +55,13 @@ this has also been implemented by default on all numeral primitives.
 
 If you would like to see more default implementations of these traits let me know in an issue on GitHub!
 
+# Changelog
+
+- **0.2.0**
+  - Added feature-gated Bincode support
+  - Added Clone trait to ByteBuffer
+  - Added truncate method to ByteBuffer
+
 # Contributing
 Feel free to contribute by sending pull requests. For major changes or if you have an idea that could help improve Bytey, please open an issue!
 

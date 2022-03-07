@@ -1,0 +1,18 @@
+[package]
+name = "bytey_derive"
+homepage = "https://github.com/Stefanowhb/bytey"
+repository = "https://github.com/Stefanowhb/bytey"
+version = "0.1.0"
+edition = "2021"
+description = "Bytey derive macros, use Bytey instead"
+keywords = ["buffers", "io", "utility", "byte", "endian"]
+categories = ["data-structures", "encoding", "network-programming", "macro"]
+license = "MIT"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+bytey_byte_buffer = { path = "../bytey_byte_buffer", version = "0.2.0" }
+quote = "1.0.15"
+syn = "1.0.86"

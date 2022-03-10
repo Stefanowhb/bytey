@@ -160,8 +160,6 @@ fn parse_enum_write(ident: Ident, data: DataEnum) -> TokenStream {
 }
 
 fn parse_struct_write(ident: Ident, data: DataStruct) -> TokenStream {
-    let mut expanded: TokenStream;
-
     match data.fields {
         Fields::Named(FieldsNamed { named, .. }) => {
             let mut fields = Vec::<Ident>::new();
@@ -170,7 +168,7 @@ fn parse_struct_write(ident: Ident, data: DataStruct) -> TokenStream {
                 fields.push(field.ident.unwrap());
             }
 
-            expanded = generate_byte_buffer_write_impl(ident, fields);
+            generate_byte_buffer_write_impl(ident, fields)
         }
         Fields::Unnamed(FieldsUnnamed { unnamed, .. }) => {
             let mut count: usize = 0;
@@ -182,12 +180,10 @@ fn parse_struct_write(ident: Ident, data: DataStruct) -> TokenStream {
                 count += 1;
             }
 
-            expanded = generate_byte_buffer_write_impl(ident, fields);
+            generate_byte_buffer_write_impl(ident, fields)
         }
-        Fields::Unit => expanded = TokenStream::new(),
+        Fields::Unit => TokenStream::new(),
     }
-
-    expanded
 }
 
 fn generate_byte_buffer_write_impl<T: quote::ToTokens>(

@@ -16,3 +16,4 @@ proc-macro = true
 bytey_byte_buffer = { path = "../bytey_byte_buffer", version = "0.2.0" }
 quote = "1.0.15"
 syn = "1.0.86"
+proc-macro2 = "1.0.36"

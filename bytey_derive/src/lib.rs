@@ -154,6 +154,35 @@ fn parse_enum_write(ident: Ident, data: DataEnum) -> TokenStream {
                 Ok(())
             }
         }
+
+        impl ::bytey_byte_buffer::byte_buffer_write::ByteBufferWrite for &#ident {
+            #[inline]
+            fn write_to_buffer(&self, buffer: &mut ::bytey_byte_buffer::byte_buffer::ByteBuffer) -> ::bytey_byte_buffer::error::Result<()> {
+                match self {
+                    #(#variants_native),*
+                }
+
+                Ok(())
+            }
+
+            #[inline]
+            fn write_to_buffer_le(&self, buffer: &mut ::bytey_byte_buffer::byte_buffer::ByteBuffer) -> ::bytey_byte_buffer::error::Result<()> {
+                match self {
+                    #(#variants_le),*
+                }
+
+                Ok(())
+            }
+
+            #[inline]
+            fn write_to_buffer_be(&self, buffer: &mut ::bytey_byte_buffer::byte_buffer::ByteBuffer) -> ::bytey_byte_buffer::error::Result<()> {
+                match self {
+                    #(#variants_be),*
+                }
+
+                Ok(())
+            }
+        }
     };
 
     expanded.into()

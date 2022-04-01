@@ -48,7 +48,16 @@ fn handle_struct(input: StructSource) -> proc_macro2::TokenStream {
                 });
             }
         }
-        syn::Fields::Unit => return proc_macro2::TokenStream::new(),
+        syn::Fields::Unit => {
+            input
+                .ident
+                .span()
+                .unwrap()
+                .error("Unit structs are currently not supported")
+                .emit();
+
+            return proc_macro2::TokenStream::new();
+        }
     }
 
     let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();

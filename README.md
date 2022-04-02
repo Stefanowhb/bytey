@@ -18,33 +18,34 @@ A link to the documentation can be found [here](https://docs.rs/bytey/latest/byt
 To start using this crate all you have to do is add it to your ``Cargo.toml``:
 ```toml
 [dependencies]
-bytey = "0.1.0"
+bytey = "0.3.0"
 ```
 
 # Usage
 ```rust
 use bytey::ByteBuffer;
 
-fn main() { 
+fn main() {
     let mut buffer = ByteBuffer::new().unwrap();
-    
+
     let value1: u16 = 1234;
     let value2: i32 = -2000;
     let value3: usize = usize::MAX;
-    
-    // The buffer will resize itself to fit all the values
+
+    // Initially the buffer will have a size of 8 bytes, unless you create the buffer using the with_capacity method
+    // The buffer will resize itself to fit all data inside of it
     buffer.write(&value1);
     buffer.write(&value2);
     buffer.write(&value3);
-    
+
     // When you write a value to the buffer, the cursor will move along
     // So if we want to read the values we just put in, we have to move it back to 0
     buffer.move_cursor(0);
-    
+
     // Read and print the values stored inside the buffer
-    println!("{}", buffer.read::<u16>().unwrap());
-    println!("{}", buffer.read::<i32>().unwrap());
-    println!("{}", buffer.read::<usize>().unwrap());
+    println!("{}", buffer.read::<u16>().unwrap()); // prints "1234"
+    println!("{}", buffer.read::<i32>().unwrap()); // prints "-2000"
+    println!("{}", buffer.read::<usize>().unwrap()); // prints what the MAX is for usize on the system
 }
 ```
 Any value written to the ByteBuffer will have to implement the ``ByteBufferWrite`` trait.
@@ -55,7 +56,38 @@ this has also been implemented by default on all numeral primitives.
 
 If you would like to see more default implementations of these traits let me know in an issue on GitHub!
 
+# Macros
+Bytey comes with 2 derive macros with the same name as the traits ``ByteBufferWrite`` and ``ByteBufferRead`` 
+that you can use on your own structs and enums. 
+ 
+```rust
+use bytey::{ByteBuffer, ByteBufferRead, ByteBufferWrite};
+
+fn main() {
+    #[derive(ByteBufferRead, ByteBufferWrite, Debug, PartialEq)]
+    struct Test {
+      a: u8,
+      b: u16,
+      c: isize,
+    }
+
+    let mut buffer = ByteBuffer::new().unwrap();
+    let val = Test { a: 1, b: 2, c: 3 };
+
+    buffer.write(&val);
+    buffer.move_cursor(0);
+
+    assert_eq!(val, buffer.read::<Test>().unwrap());
+}
+```
+Keep in mind that all the fields inside the struct or enum **must** implement the trait as well, else you will get an error.
+
+
 # Changelog
+
+- **0.3.0**
+  - Added derive macros for the ByteBufferWrite and ByteBufferRead traits
+
 
 - **0.2.0**
   - Added feature-gated Bincode support

@@ -18,7 +18,8 @@
 //!     let value2: i32 = -2000;
 //!     let value3: usize = usize::MAX;
 //!
-//!     // The buffer will resize itself to fit all the values
+//!     // Initially the buffer will have a size of 8 bytes, unless you create the buffer using the with_capacity method
+//!     // The buffer will resize itself to fit all data inside of it
 //!     buffer.write(&value1);
 //!     buffer.write(&value2);
 //!     buffer.write(&value3);
@@ -28,9 +29,9 @@
 //!     buffer.move_cursor(0);
 //!
 //!     // Read and print the values stored inside the buffer
-//!     println!("{}", buffer.read::<u16>().unwrap());
-//!     println!("{}", buffer.read::<i32>().unwrap());
-//!     println!("{}", buffer.read::<usize>().unwrap());
+//!     println!("{}", buffer.read::<u16>().unwrap()); // prints "1234"
+//!     println!("{}", buffer.read::<i32>().unwrap()); // prints "-2000"
+//!     println!("{}", buffer.read::<usize>().unwrap()); // prints what the MAX is for usize on the system
 //! }
 //! ```
 //! Any value written to the ByteBuffer will have to implement the ``ByteBufferWrite`` trait.
@@ -56,6 +57,9 @@ pub use bytey_byte_buffer::byte_buffer_write::ByteBufferWrite;
 
 #[doc(inline)]
 pub use bytey_byte_buffer::byte_buffer_read::ByteBufferRead;
+
+pub use bytey_derive::ByteBufferRead;
+pub use bytey_derive::ByteBufferWrite;
 
 #[cfg(feature = "bincode_serialize")]
 #[cfg_attr(docsrs, doc(cfg(feature = "bincode_serialize")))]

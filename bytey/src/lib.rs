@@ -5,7 +5,7 @@
 //! To start using this crate all you have to do is add it to your **Cargo.toml**:
 //! ```toml
 //! [dependencies]
-//! bytey = "0.1.0"
+//! bytey = "0.3.0"
 //! ```
 //! # Usage
 //!```

@@ -1,4 +1,4 @@
-use bytey_byte_buffer::byte_buffer::ByteBuffer;
+use bytey::ByteBuffer;
 use bytey_derive::ByteBufferWrite;
 
 fn test_enum_write() {

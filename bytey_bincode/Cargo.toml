@@ -2,7 +2,7 @@
 name = "bytey_bincode"
 homepage = "https://github.com/Stefanowhb/bytey"
 repository = "https://github.com/Stefanowhb/bytey"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Bytey Bincode Extension, use Bytey instead"
 keywords = ["buffers", "io", "utility", "byte", "endian"]
@@ -10,7 +10,7 @@ categories = ["data-structures", "encoding", "network-programming", "bincode"]
 license = "MIT"
 
 [dependencies]
-bytey_byte_buffer = { path = "../bytey_byte_buffer", version = "0.2.0" }
+bytey_byte_buffer = { path = "../bytey_byte_buffer", version = "0.2.1" }
 bincode = "2.0.0-beta.2"
 
 [[test]]

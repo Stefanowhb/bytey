@@ -191,7 +191,7 @@ impl ByteBuffer {
     ///
     /// let mut buffer = ByteBuffer::new().unwrap();
     ///
-    /// buffer.expand(4);
+    /// buffer.shrink(4);
     /// ```
     pub fn shrink(&mut self, amount: usize) -> Result<&mut Self> {
         self.resize(

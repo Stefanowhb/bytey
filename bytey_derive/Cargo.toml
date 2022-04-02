@@ -2,7 +2,7 @@
 name = "bytey_derive"
 homepage = "https://github.com/Stefanowhb/bytey"
 repository = "https://github.com/Stefanowhb/bytey"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Bytey derive macros, use Bytey instead"
 keywords = ["buffers", "io", "utility", "byte", "endian"]

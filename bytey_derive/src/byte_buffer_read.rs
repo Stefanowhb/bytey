@@ -127,19 +127,19 @@ fn handle_struct(input: StructSource) -> proc_macro2::TokenStream {
     let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
 
     quote! {
-        impl #impl_generics ::bytey_byte_buffer::byte_buffer_read::ByteBufferRead for #struct_ident #ty_generics #where_clause {
+        impl #impl_generics ::bytey::ByteBufferRead for #struct_ident #ty_generics #where_clause {
             #[inline]
-            fn read_from_buffer(buffer: &mut ::bytey_byte_buffer::byte_buffer::ByteBuffer) -> ::bytey_byte_buffer::error::Result<#struct_ident #ty_generics> {
+            fn read_from_buffer(buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<#struct_ident #ty_generics> {
                 Ok(#init_struct_native)
             }
 
             #[inline]
-            fn read_from_buffer_le(buffer: &mut ::bytey_byte_buffer::byte_buffer::ByteBuffer) -> ::bytey_byte_buffer::error::Result<#struct_ident #ty_generics> {
+            fn read_from_buffer_le(buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<#struct_ident #ty_generics> {
                 Ok(#init_struct_le)
             }
 
             #[inline]
-            fn read_from_buffer_be(buffer: &mut ::bytey_byte_buffer::byte_buffer::ByteBuffer) -> ::bytey_byte_buffer::error::Result<#struct_ident #ty_generics> {
+            fn read_from_buffer_be(buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<#struct_ident #ty_generics> {
                 Ok(#init_struct_be)
             }
         }
@@ -242,28 +242,28 @@ fn handle_enum(input: EnumSource) -> proc_macro2::TokenStream {
     let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
 
     quote! {
-        impl #impl_generics ::bytey_byte_buffer::byte_buffer_read::ByteBufferRead for #enum_ident #ty_generics #where_clause {
+        impl #impl_generics ::bytey::ByteBufferRead for #enum_ident #ty_generics #where_clause {
             #[inline]
-            fn read_from_buffer(buffer: &mut ::bytey_byte_buffer::byte_buffer::ByteBuffer) -> ::bytey_byte_buffer::error::Result<#enum_ident #ty_generics> {
+            fn read_from_buffer(buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<#enum_ident #ty_generics> {
                 match buffer.read::<u16>()? {
                     #(#match_arms_native,)*
-                    id => Err(::bytey_byte_buffer::error::ByteBufferError::OtherError { error: ::std::format!("Invalid id: {}", id) })
+                    id => Err(::bytey::ByteBufferError::OtherError { error: ::std::format!("Invalid id: {}", id) })
                 }
             }
 
             #[inline]
-            fn read_from_buffer_le(buffer: &mut ::bytey_byte_buffer::byte_buffer::ByteBuffer) -> ::bytey_byte_buffer::error::Result<#enum_ident #ty_generics> {
+            fn read_from_buffer_le(buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<#enum_ident #ty_generics> {
                 match buffer.read::<u16>()? {
                     #(#match_arms_le,)*
-                    id => Err(::bytey_byte_buffer::error::ByteBufferError::OtherError { error: ::std::format!("Invalid id: {}", id) })
+                    id => Err(::bytey::ByteBufferError::OtherError { error: ::std::format!("Invalid id: {}", id) })
                 }
             }
 
             #[inline]
-            fn read_from_buffer_be(buffer: &mut ::bytey_byte_buffer::byte_buffer::ByteBuffer) -> ::bytey_byte_buffer::error::Result<#enum_ident #ty_generics> {
+            fn read_from_buffer_be(buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<#enum_ident #ty_generics> {
                 match buffer.read::<u16>()? {
                     #(#match_arms_be,)*
-                    id => Err(::bytey_byte_buffer::error::ByteBufferError::OtherError { error: ::std::format!("Invalid id: {}", id) })
+                    id => Err(::bytey::ByteBufferError::OtherError { error: ::std::format!("Invalid id: {}", id) })
                 }
             }
         }

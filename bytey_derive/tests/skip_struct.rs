@@ -2,11 +2,12 @@ use bytey::ByteBuffer;
 use bytey_derive::{ByteBufferRead, ByteBufferWrite};
 
 #[test]
-fn test_struct_named_read() {
+fn test_struct_skip() {
     #[derive(ByteBufferWrite, ByteBufferRead, PartialEq, Debug)]
     struct Test {
         a: u16,
         b: u8,
+        #[bytey(skip)]
         c: i64,
         d: usize,
     }
@@ -26,9 +27,9 @@ fn test_struct_named_read() {
 }
 
 #[test]
-fn test_struct_unnamed_read() {
+fn test_struct_unnamed_skip() {
     #[derive(ByteBufferWrite, ByteBufferRead, PartialEq, Debug)]
-    struct Test(u16, u8, i64, usize);
+    struct Test(u16, u8, #[bytey(skip)] i64, usize);
 
     let mut buffer = ByteBuffer::new().unwrap();
     let val = Test(128, 255, -255, usize::MAX);

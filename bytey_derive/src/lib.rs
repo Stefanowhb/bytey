@@ -4,6 +4,7 @@ mod byte_buffer_read;
 mod byte_buffer_write;
 mod field_wrapper;
 mod source;
+mod symbols;
 
 use proc_macro::TokenStream;
 use syn::parse_macro_input;

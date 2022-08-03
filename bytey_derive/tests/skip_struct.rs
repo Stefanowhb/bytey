@@ -13,7 +13,7 @@ fn test_struct_skip() {
     }
 
     let mut buffer = ByteBuffer::new().unwrap();
-    let val = Test {
+    let mut val = Test {
         a: 128,
         b: 255,
         c: -255,
@@ -23,6 +23,7 @@ fn test_struct_skip() {
     buffer.write(&val).unwrap();
     buffer.move_cursor(0).unwrap();
 
+    val.c = 0;
     assert_eq!(val, buffer.read::<Test>().unwrap());
 }
 
@@ -37,5 +38,5 @@ fn test_struct_unnamed_skip() {
     buffer.write(&val).unwrap();
     buffer.move_cursor(0).unwrap();
 
-    assert_eq!(val, buffer.read::<Test>().unwrap());
+    assert_ne!(val, buffer.read::<Test>().unwrap());
 }

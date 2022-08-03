@@ -23,7 +23,7 @@ fn test_enum_write() {
 
     assert_eq!(
         [
-            0, 1, /* u16 for variant named id: 1 */
+            1, 0, /* u16 for variant named id: 1 */
             128, 0,   /* u16: 128 */
             255, /* u8: 255 */
             1, 255, 255, 255, 255, 255, 255, 255, /* i64: -255 */
@@ -40,7 +40,7 @@ fn test_enum_write() {
 
     assert_eq!(
         [
-            0, 2, /* u16 for variant unnamed id: 2 */
+            2, 0, /* u16 for variant unnamed id: 2 */
             128, 0,   /* u16: 128 */
             255, /* u8: 255 */
             1, 255, 255, 255, 255, 255, 255, 255, /* i64: -255 */
@@ -56,7 +56,7 @@ fn test_enum_write() {
     buffer.move_cursor(0).unwrap();
 
     assert_eq!(
-        [0, 3], /* u16 for variant unit id: 3 */
+        [3, 0], /* u16 for variant unit id: 3 */
         buffer.read_slice(2).unwrap()
     );
 }

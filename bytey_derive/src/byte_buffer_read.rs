@@ -1,5 +1,7 @@
-use crate::field_wrapper::is_skipped;
-use crate::source::{EnumSource, StructSource};
+use crate::{
+    field_wrapper::is_skipped,
+    source::{EnumSource, StructSource},
+};
 use quote::quote;
 
 pub fn expand_derive_byte_buffer_read(input: &syn::DeriveInput) -> proc_macro2::TokenStream {
@@ -44,33 +46,21 @@ fn handle_struct(input: StructSource) -> proc_macro2::TokenStream {
                 let field_ty = &field.ty;
 
                 field_reads_native.push(if is_skipped(field) {
-                    quote! {
-                        #field_ident: Default::default()
-                    }
+                    quote! {#field_ident: Default::default()}
                 } else {
-                    quote! {
-                        #field_ident: buffer.read::<#field_ty>()?
-                    }
+                    quote! {#field_ident: buffer.read::<#field_ty>()?}
                 });
 
                 field_reads_le.push(if is_skipped(field) {
-                    quote! {
-                        #field_ident: Default::default()
-                    }
+                    quote! {#field_ident: Default::default()}
                 } else {
-                    quote! {
-                        #field_ident: buffer.read_le::<#field_ty>()?
-                    }
+                    quote! {#field_ident: buffer.read_le::<#field_ty>()?}
                 });
 
                 field_reads_be.push(if is_skipped(field) {
-                    quote! {
-                        #field_ident: Default::default()
-                    }
+                    quote! {#field_ident: Default::default()}
                 } else {
-                    quote! {
-                        #field_ident: buffer.read_be::<#field_ty>()?
-                    }
+                    quote! {#field_ident: buffer.read_be::<#field_ty>()?}
                 });
             }
 
@@ -101,33 +91,21 @@ fn handle_struct(input: StructSource) -> proc_macro2::TokenStream {
                 let field_ty = &field.ty;
 
                 field_reads_native.push(if is_skipped(field) {
-                    quote! {
-                        Default::default()
-                    }
+                    quote! { Default::default() }
                 } else {
-                    quote! {
-                        buffer.read::<#field_ty>()?
-                    }
+                    quote! { buffer.read::<#field_ty>()?}
                 });
 
                 field_reads_le.push(if is_skipped(field) {
-                    quote! {
-                        Default::default()
-                    }
+                    quote! { Default::default() }
                 } else {
-                    quote! {
-                        buffer.read_le::<#field_ty>()?
-                    }
+                    quote! { buffer.read_le::<#field_ty>()?}
                 });
 
                 field_reads_be.push(if is_skipped(field) {
-                    quote! {
-                        Default::default()
-                    }
+                    quote! { Default::default() }
                 } else {
-                    quote! {
-                        buffer.read_be::<#field_ty>()?
-                    }
+                    quote! { buffer.read_be::<#field_ty>()?}
                 });
             }
 

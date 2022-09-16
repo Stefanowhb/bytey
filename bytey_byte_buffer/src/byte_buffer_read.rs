@@ -33,6 +33,25 @@ macro_rules! impl_byte_buffer_read_types {
     }
 }
 
+impl ByteBufferRead for bool {
+    #[inline]
+    fn read_from_buffer(buffer: &mut ByteBuffer) -> Result<bool> {
+        let data = buffer.read::<u8>()?;
+
+        Ok(data != 0)
+    }
+
+    #[inline]
+    fn read_from_buffer_le(buffer: &mut ByteBuffer) -> Result<bool> {
+        buffer.read::<bool>()
+    }
+
+    #[inline]
+    fn read_from_buffer_be(buffer: &mut ByteBuffer) -> Result<bool> {
+        buffer.read::<bool>()
+    }
+}
+
 impl_byte_buffer_read_types!(
     u8, u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize, f32, f64
 );

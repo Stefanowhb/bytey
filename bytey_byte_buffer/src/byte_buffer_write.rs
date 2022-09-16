@@ -94,6 +94,50 @@ impl ByteBufferWrite for &i8 {
     }
 }
 
+impl ByteBufferWrite for bool {
+    #[inline]
+    fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
+        let data = *self as u8;
+        unsafe {
+            buffer.write_slice(slice::from_raw_parts(data as *const u8, 1))?;
+        }
+
+        Ok(())
+    }
+
+    #[inline]
+    fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
+        self.write_to_buffer(buffer)
+    }
+
+    #[inline]
+    fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
+        self.write_to_buffer(buffer)
+    }
+}
+
+impl ByteBufferWrite for &bool {
+    #[inline]
+    fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
+        let data = **self as u8;
+        unsafe {
+            buffer.write_slice(slice::from_raw_parts(data as *const u8, 1))?;
+        }
+
+        Ok(())
+    }
+
+    #[inline]
+    fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
+        self.write_to_buffer(buffer)
+    }
+
+    #[inline]
+    fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
+        self.write_to_buffer(buffer)
+    }
+}
+
 macro_rules! impl_byte_buffer_write_types {
     ($($type:ty),*) => {
         $(

@@ -138,103 +138,73 @@ impl ByteBufferWrite for &bool {
     }
 }
 
-impl<'a, T: ByteBufferWrite + 'a> ByteBufferWrite for Option<T>
-where
-    &'a T: ByteBufferWrite + 'a,
-{
+impl<T: ByteBufferWrite> ByteBufferWrite for Option<T> {
     #[inline]
     fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match self {
             Some(v) => {
-                buffer.write(1u16)?;
-                buffer.write(v)?;
+                1u16.write_to_buffer(buffer)?;
+                v.write_to_buffer(buffer)
             }
-            None => {
-                buffer.write(2u16)?;
-            }
+            None => 2u16.write_to_buffer(buffer),
         }
-
-        Ok(())
     }
 
     #[inline]
     fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match self {
             Some(v) => {
-                buffer.write_le(1u16)?;
-                buffer.write_le(v)?;
+                1u16.write_to_buffer_le(buffer)?;
+                v.write_to_buffer_le(buffer)
             }
-            None => {
-                buffer.write_le(2u16)?;
-            }
+            None => 2u16.write_to_buffer_le(buffer),
         }
-
-        Ok(())
     }
 
     #[inline]
     fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match self {
             Some(v) => {
-                buffer.write_be(1u16)?;
-                buffer.write_be(v)?;
+                1u16.write_to_buffer_be(buffer)?;
+                v.write_to_buffer_be(buffer)
             }
-            None => {
-                buffer.write_be(2u16)?;
-            }
+            None => 2u16.write_to_buffer_be(buffer),
         }
-
-        Ok(())
     }
 }
 
-impl<'a, T: ByteBufferWrite> ByteBufferWrite for &'a Option<T>
-where
-    &'a T: ByteBufferWrite + 'a,
-{
+impl<T: ByteBufferWrite> ByteBufferWrite for &Option<T> {
     #[inline]
     fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match *self {
             Some(v) => {
-                buffer.write(1u16)?;
-                buffer.write(v)?;
+                1u16.write_to_buffer(buffer)?;
+                v.write_to_buffer(buffer)
             }
-            None => {
-                buffer.write(2u16)?;
-            }
+            None => 2u16.write_to_buffer(buffer),
         }
-
-        Ok(())
     }
 
     #[inline]
     fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match *self {
             Some(v) => {
-                buffer.write_le(1u16)?;
-                buffer.write_le(v)?;
+                1u16.write_to_buffer_le(buffer)?;
+                v.write_to_buffer_le(buffer)
             }
-            None => {
-                buffer.write_le(2u16)?;
-            }
+            None => 2u16.write_to_buffer_le(buffer),
         }
-
-        Ok(())
     }
 
     #[inline]
     fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match *self {
             Some(v) => {
-                buffer.write_be(1u16)?;
-                buffer.write_be(v)?;
+                1u16.write_to_buffer_be(buffer)?;
+                v.write_to_buffer_be(buffer)
             }
-            None => {
-                buffer.write_be(2u16)?;
-            }
+            None => 2u16.write_to_buffer_be(buffer),
         }
-
-        Ok(())
     }
 }
 

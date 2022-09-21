@@ -319,6 +319,25 @@ fn test_f64_write_read_le() {
 }
 
 #[test]
+fn test_option_write_read() {
+    let mut buffer =
+        ByteBuffer::with_capacity(std::mem::size_of::<u64>() + std::mem::size_of::<u16>()).unwrap();
+    let value: u64 = u64::MAX / 2;
+    let option = Some(value);
+
+    let _ = buffer.write(&option);
+    let _ = buffer.move_cursor(0);
+
+    let read_option = buffer.read::<Option<u64>>().unwrap();
+
+    assert_eq!(read_option, option);
+
+    let _ = buffer.move_cursor(0);
+    assert_eq!(buffer.read::<u16>().unwrap(), 1);
+    assert_eq!(buffer.read::<u64>().unwrap(), value);
+}
+
+#[test]
 fn test_f64_write_read_be() {
     let mut buffer = ByteBuffer::with_capacity(std::mem::size_of::<f64>()).unwrap();
     let value: f64 = f64::MAX / 2.0f64;

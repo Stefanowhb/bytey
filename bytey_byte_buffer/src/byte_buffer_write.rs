@@ -194,7 +194,7 @@ where
 {
     #[inline]
     fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
-        match self {
+        match *self {
             Some(v) => {
                 buffer.write(1u16)?;
                 buffer.write(v)?;
@@ -209,7 +209,7 @@ where
 
     #[inline]
     fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
-        match self {
+        match *self {
             Some(v) => {
                 buffer.write_le(1u16)?;
                 buffer.write_le(v)?;
@@ -224,7 +224,7 @@ where
 
     #[inline]
     fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
-        match self {
+        match *self {
             Some(v) => {
                 buffer.write_be(1u16)?;
                 buffer.write_be(v)?;

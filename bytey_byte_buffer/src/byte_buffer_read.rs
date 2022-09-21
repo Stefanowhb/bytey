@@ -496,7 +496,7 @@ impl ByteBufferRead for String {
         let len = buffer.read::<usize>()?;
 
         if len == 0 {
-            Ok("".to_owned())
+            Ok(String::new())
         } else {
             Ok(std::str::from_utf8(buffer.read_slice(len)?)?.to_owned())
         }
@@ -507,7 +507,7 @@ impl ByteBufferRead for String {
         let len = buffer.read_le::<usize>()?;
 
         if len == 0 {
-            Ok("".to_owned())
+            Ok(String::new())
         } else {
             Ok(std::str::from_utf8(buffer.read_slice(len)?)?.to_owned())
         }
@@ -518,7 +518,7 @@ impl ByteBufferRead for String {
         let len = buffer.read_be::<usize>()?;
 
         if len == 0 {
-            Ok("".to_owned())
+            Ok(String::new())
         } else {
             Ok(std::str::from_utf8(buffer.read_slice(len)?)?.to_owned())
         }

@@ -138,6 +138,103 @@ impl ByteBufferWrite for &bool {
     }
 }
 
+impl<'a, T: ByteBufferWrite + 'a> ByteBufferWrite for Option<T> {
+    #[inline]
+    fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
+        match self {
+            Some(v) => {
+                buffer.write(1u16)?;
+                buffer.write(*v)?;
+            }
+            None => {
+                buffer.write(2u16)?;
+            }
+        }
+
+        Ok(())
+    }
+
+    #[inline]
+    fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
+        match self {
+            Some(v) => {
+                buffer.write_le(1u16)?;
+                buffer.write_le(*v)?;
+            }
+            None => {
+                buffer.write_le(2u16)?;
+            }
+        }
+
+        Ok(())
+    }
+
+    #[inline]
+    fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
+        match self {
+            Some(v) => {
+                buffer.write_be(1u16)?;
+                buffer.write_be(*v)?;
+            }
+            None => {
+                buffer.write_be(2u16)?;
+            }
+        }
+
+        Ok(())
+    }
+}
+
+impl<'a, T: ByteBufferWrite> ByteBufferWrite for &Option<T>
+where
+    &'a T: ByteBufferWrite + 'static,
+{
+    #[inline]
+    fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
+        match self {
+            Some(v) => {
+                buffer.write(1u16)?;
+                buffer.write(v)?;
+            }
+            None => {
+                buffer.write(2u16)?;
+            }
+        }
+
+        Ok(())
+    }
+
+    #[inline]
+    fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
+        match self {
+            Some(v) => {
+                buffer.write_le(1u16)?;
+                buffer.write_le(v)?;
+            }
+            None => {
+                buffer.write_le(2u16)?;
+            }
+        }
+
+        Ok(())
+    }
+
+    #[inline]
+    fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
+        match self {
+            Some(v) => {
+                buffer.write_be(1u16)?;
+                buffer.write_be(v)?;
+            }
+            None => {
+                buffer.write_be(2u16)?;
+            }
+        }
+
+        Ok(())
+    }
+}
+
 macro_rules! impl_byte_buffer_write_types {
     ($($type:ty),*) => {
         $(

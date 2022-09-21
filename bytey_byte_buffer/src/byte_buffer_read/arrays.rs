@@ -3,109 +3,191 @@ use crate::{
     byte_buffer_read::ByteBufferRead,
     error::{ByteBufferError, Result},
 };
+use std::mem::{self, MaybeUninit};
 
-macro_rules! array_impls {
-    ($($len:expr => ($($n:tt)+))+) => {
-        $(
-            impl<T: ByteBufferRead> ByteBufferRead for [T; $len]
-            {
-                #[inline]
-                fn read_from_buffer(buffer: &mut ByteBuffer) -> Result<Self> {
-                    let size = buffer.read::<usize>()?;
+//The Array read implementation is thanks to bincode. it was designed based on their work.
+//If we find any major bugs that could Affect them we should let them know and give them any fixes.
+struct Guard<'a, T, const N: usize> {
+    array_mut: &'a mut [MaybeUninit<T>; N],
+    initialized: usize,
+}
 
-                    if size != $len {
-                        return Err(ByteBufferError::OtherError {
-                            error: format!("Invalid size in buffer for [T; {}]. Should be [T; {}]?", $len, size),
-                        })
-                    }
+impl<T, const N: usize> Drop for Guard<'_, T, N> {
+    fn drop(&mut self) {
+        debug_assert!(self.initialized <= N);
 
-                    Ok([$(
-                        match buffer.read::<T>() {
-                            Ok(v) => v,
-                            Err(e) => return Err(ByteBufferError::OtherError {
-                                error: format!("{} occured at arr[{}] ?", e, $n),
-                            })
-                        }
-                    ),+])
-                }
-
-                #[inline]
-                fn read_from_buffer_le(buffer: &mut ByteBuffer) -> Result<Self> {
-                    let size = buffer.read_le::<usize>()?;
-
-                    if size != $len {
-                        return Err(ByteBufferError::OtherError {
-                            error: format!("Invalid size in buffer for [T; {}]. Should be [T; {}]?", $len, size),
-                        })
-                    }
-
-                    Ok([$(
-                        match buffer.read_le::<T>() {
-                            Ok(v) => v,
-                            Err(e) => return Err(ByteBufferError::OtherError {
-                                error: format!("{} occured at arr[{}] ?", e, $n),
-                            })
-                        }
-                    ),+])
-                }
-
-                #[inline]
-                fn read_from_buffer_be(buffer: &mut ByteBuffer) -> Result<Self> {
-                    let size = buffer.read_be::<usize>()?;
-
-                    if size != $len {
-                        return Err(ByteBufferError::OtherError {
-                            error: format!("Invalid size in buffer for [T; {}]. Should be [T; {}]?", $len, size),
-                        })
-                    }
-
-                    Ok([$(
-                        match buffer.read_be::<T>() {
-                            Ok(v) => v,
-                            Err(e) => return Err(ByteBufferError::OtherError {
-                                error: format!("{} occured at arr[{}] ?", e, $n),
-                            })
-                        }
-                    ),+])
-                }
-            }
-        )+
+        // SAFETY: this slice will contain only initialized objects.
+        unsafe {
+            std::ptr::drop_in_place(
+                &mut *(self.array_mut.get_unchecked_mut(..self.initialized)
+                    as *mut [MaybeUninit<T>] as *mut [T]),
+            );
+        }
     }
 }
 
-array_impls! {
-    1 => (0)
-    2 => (0 1)
-    3 => (0 1 2)
-    4 => (0 1 2 3)
-    5 => (0 1 2 3 4)
-    6 => (0 1 2 3 4 5)
-    7 => (0 1 2 3 4 5 6)
-    8 => (0 1 2 3 4 5 6 7)
-    9 => (0 1 2 3 4 5 6 7 8)
-    10 => (0 1 2 3 4 5 6 7 8 9)
-    11 => (0 1 2 3 4 5 6 7 8 9 10)
-    12 => (0 1 2 3 4 5 6 7 8 9 10 11)
-    13 => (0 1 2 3 4 5 6 7 8 9 10 11 12)
-    14 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13)
-    15 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14)
-    16 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15)
-    17 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
-    18 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17)
-    19 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18)
-    20 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19)
-    21 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20)
-    22 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21)
-    23 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22)
-    24 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23)
-    25 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24)
-    26 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25)
-    27 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26)
-    28 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27)
-    29 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28)
-    30 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29)
-    31 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30)
-    32 => (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31)
+impl<T: ByteBufferRead, const N: usize> ByteBufferRead for [T; N] {
+    #[inline]
+    fn read_from_buffer(buffer: &mut ByteBuffer) -> Result<Self> {
+        if N == 0 {
+            return Err(ByteBufferError::OtherError {
+                error: "Can not read to an [T;0]. The array must have a size.".to_owned(),
+            });
+        }
+
+        let size = buffer.read::<usize>()?;
+
+        if size != N {
+            return Err(ByteBufferError::OtherError {
+                error: format!(
+                    "Invalid size in buffer for [T; {}]. Should be [T; {}]?",
+                    N, size
+                ),
+            });
+        }
+
+        let mut array = unsafe { MaybeUninit::<[MaybeUninit<T>; N]>::uninit().assume_init() };
+        let mut guard = Guard {
+            array_mut: &mut array,
+            initialized: 0,
+        };
+
+        for _ in 0..N {
+            let item = buffer.read::<T>()?;
+
+            // SAFETY: `guard.initialized` starts at 0, is increased by one in the
+            // loop and the loop is aborted once it reaches N (which is
+            // `array.len()`).
+            unsafe {
+                guard
+                    .array_mut
+                    .get_unchecked_mut(guard.initialized)
+                    .write(item);
+            }
+            guard.initialized += 1;
+        }
+
+        if guard.initialized == N {
+            mem::forget(guard);
+
+            // SAFETY: the condition above asserts that all elements are
+            // initialized.
+            let out = unsafe { (&array as *const _ as *const [T; N]).read() };
+            Ok(out)
+        } else {
+            Err(ByteBufferError::OtherError {
+                error: "Not all of the array was initialized".to_owned(),
+            })
+        }
+    }
+
+    #[inline]
+    fn read_from_buffer_le(buffer: &mut ByteBuffer) -> Result<Self> {
+        if N == 0 {
+            return Err(ByteBufferError::OtherError {
+                error: "Can not read to an [T;0]. The array must have a size.".to_owned(),
+            });
+        }
+
+        let size = buffer.read_le::<usize>()?;
+
+        if size != N {
+            return Err(ByteBufferError::OtherError {
+                error: format!(
+                    "Invalid size in buffer for [T; {}]. Should be [T; {}]?",
+                    N, size
+                ),
+            });
+        }
+
+        let mut array = unsafe { MaybeUninit::<[MaybeUninit<T>; N]>::uninit().assume_init() };
+        let mut guard = Guard {
+            array_mut: &mut array,
+            initialized: 0,
+        };
+
+        for _ in 0..N {
+            let item = buffer.read_le::<T>()?;
+
+            // SAFETY: `guard.initialized` starts at 0, is increased by one in the
+            // loop and the loop is aborted once it reaches N (which is
+            // `array.len()`).
+            unsafe {
+                guard
+                    .array_mut
+                    .get_unchecked_mut(guard.initialized)
+                    .write(item);
+            }
+            guard.initialized += 1;
+        }
+
+        if guard.initialized == N {
+            mem::forget(guard);
+
+            // SAFETY: the condition above asserts that all elements are
+            // initialized.
+            let out = unsafe { (&array as *const _ as *const [T; N]).read() };
+            Ok(out)
+        } else {
+            Err(ByteBufferError::OtherError {
+                error: "Not all of the array was initialized".to_owned(),
+            })
+        }
+    }
+
+    #[inline]
+    fn read_from_buffer_be(buffer: &mut ByteBuffer) -> Result<Self> {
+        if N == 0 {
+            return Err(ByteBufferError::OtherError {
+                error: "Can not read to an [T;0]. The array must have a size.".to_owned(),
+            });
+        }
+
+        let size = buffer.read_be::<usize>()?;
+
+        if size != N {
+            return Err(ByteBufferError::OtherError {
+                error: format!(
+                    "Invalid size in buffer for [T; {}]. Should be [T; {}]?",
+                    N, size
+                ),
+            });
+        }
+
+        let mut array = unsafe { MaybeUninit::<[MaybeUninit<T>; N]>::uninit().assume_init() };
+        let mut guard = Guard {
+            array_mut: &mut array,
+            initialized: 0,
+        };
+
+        for _ in 0..N {
+            let item = buffer.read_be::<T>()?;
+
+            // SAFETY: `guard.initialized` starts at 0, is increased by one in the
+            // loop and the loop is aborted once it reaches N (which is
+            // `array.len()`).
+            unsafe {
+                guard
+                    .array_mut
+                    .get_unchecked_mut(guard.initialized)
+                    .write(item);
+            }
+            guard.initialized += 1;
+        }
+
+        if guard.initialized == N {
+            mem::forget(guard);
+
+            // SAFETY: the condition above asserts that all elements are
+            // initialized.
+            let out = unsafe { (&array as *const _ as *const [T; N]).read() };
+            Ok(out)
+        } else {
+            Err(ByteBufferError::OtherError {
+                error: "Not all of the array was initialized".to_owned(),
+            })
+        }
+    }
 }
 
 impl<T: ByteBufferRead> ByteBufferRead for Vec<T> {

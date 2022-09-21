@@ -138,13 +138,16 @@ impl ByteBufferWrite for &bool {
     }
 }
 
-impl<'a, T: ByteBufferWrite + 'a> ByteBufferWrite for Option<T> {
+impl<'a, T: ByteBufferWrite + 'a> ByteBufferWrite for Option<T>
+where
+    &'a T: ByteBufferWrite + 'a,
+{
     #[inline]
     fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match self {
             Some(v) => {
                 buffer.write(1u16)?;
-                buffer.write(*v)?;
+                buffer.write(v)?;
             }
             None => {
                 buffer.write(2u16)?;
@@ -159,7 +162,7 @@ impl<'a, T: ByteBufferWrite + 'a> ByteBufferWrite for Option<T> {
         match self {
             Some(v) => {
                 buffer.write_le(1u16)?;
-                buffer.write_le(*v)?;
+                buffer.write_le(v)?;
             }
             None => {
                 buffer.write_le(2u16)?;
@@ -174,7 +177,7 @@ impl<'a, T: ByteBufferWrite + 'a> ByteBufferWrite for Option<T> {
         match self {
             Some(v) => {
                 buffer.write_be(1u16)?;
-                buffer.write_be(*v)?;
+                buffer.write_be(v)?;
             }
             None => {
                 buffer.write_be(2u16)?;
@@ -187,7 +190,7 @@ impl<'a, T: ByteBufferWrite + 'a> ByteBufferWrite for Option<T> {
 
 impl<'a, T: ByteBufferWrite> ByteBufferWrite for &Option<T>
 where
-    &'a T: ByteBufferWrite + 'static,
+    &'a T: ByteBufferWrite + 'a,
 {
     #[inline]
     fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {

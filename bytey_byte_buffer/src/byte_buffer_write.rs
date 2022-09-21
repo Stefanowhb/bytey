@@ -2,15 +2,23 @@ use crate::{byte_buffer::ByteBuffer, error::Result};
 use cfg_if::cfg_if;
 
 mod arrays;
+mod bound;
 mod byte;
+mod cell;
 mod option;
+mod phantom;
+mod range;
 mod result;
 mod string;
 mod tuple;
 
 pub use arrays::*;
+pub use bound::*;
 pub use byte::*;
+pub use cell::*;
 pub use option::*;
+pub use phantom::*;
+pub use range::*;
 pub use result::*;
 pub use string::*;
 pub use tuple::*;

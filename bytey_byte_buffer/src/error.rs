@@ -26,4 +26,7 @@ pub enum ByteBufferError {
 
     #[error("Other Error: {error}")]
     OtherError { error: String },
+
+    #[error(transparent)]
+    UnicodeError(#[from] std::str::Utf8Error),
 }

@@ -489,3 +489,38 @@ tuple_impls! {
         (11) -> L
     }
 }
+
+impl ByteBufferRead for String {
+    #[inline]
+    fn read_from_buffer(buffer: &mut ByteBuffer) -> Result<Self> {
+        let len = buffer.read::<usize>()?;
+
+        if len == 0 {
+            Ok("".to_owned())
+        } else {
+            Ok(std::str::from_utf8(buffer.read_slice(len)?)?.to_owned())
+        }
+    }
+
+    #[inline]
+    fn read_from_buffer_le(buffer: &mut ByteBuffer) -> Result<Self> {
+        let len = buffer.read_le::<usize>()?;
+
+        if len == 0 {
+            Ok("".to_owned())
+        } else {
+            Ok(std::str::from_utf8(buffer.read_slice(len)?)?.to_owned())
+        }
+    }
+
+    #[inline]
+    fn read_from_buffer_be(buffer: &mut ByteBuffer) -> Result<Self> {
+        let len = buffer.read_be::<usize>()?;
+
+        if len == 0 {
+            Ok("".to_owned())
+        } else {
+            Ok(std::str::from_utf8(buffer.read_slice(len)?)?.to_owned())
+        }
+    }
+}

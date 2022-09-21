@@ -144,6 +144,47 @@ impl<T: ByteBufferRead, E: ByteBufferRead> ByteBufferRead for std::result::Resul
     }
 }
 
+impl<E: ByteBufferRead> ByteBufferRead for std::result::Result<(), E> {
+    #[inline]
+    fn read_from_buffer(buffer: &mut ByteBuffer) -> Result<std::result::Result<(), E>> {
+        Ok(match buffer.read::<u16>()? {
+            1 => Ok(()),
+            2 => Err(buffer.read::<E>()?),
+            _ => {
+                return Err(ByteBufferError::OtherError {
+                    error: "Invalid Read to Result".to_owned(),
+                })
+            }
+        })
+    }
+
+    #[inline]
+    fn read_from_buffer_le(buffer: &mut ByteBuffer) -> Result<std::result::Result<(), E>> {
+        Ok(match buffer.read_le::<u16>()? {
+            1 => Ok(()),
+            2 => Err(buffer.read_le::<E>()?),
+            _ => {
+                return Err(ByteBufferError::OtherError {
+                    error: "Invalid Read to Result".to_owned(),
+                })
+            }
+        })
+    }
+
+    #[inline]
+    fn read_from_buffer_be(buffer: &mut ByteBuffer) -> Result<std::result::Result<(), E>> {
+        Ok(match buffer.read_be::<u16>()? {
+            1 => Ok(()),
+            2 => Err(buffer.read_be::<E>()?),
+            _ => {
+                return Err(ByteBufferError::OtherError {
+                    error: "Invalid Read to Result".to_owned(),
+                })
+            }
+        })
+    }
+}
+
 macro_rules! array_impls {
     ($($len:expr => ($($n:tt)+))+) => {
         $(
@@ -298,5 +339,153 @@ impl<T: ByteBufferRead> ByteBufferRead for Vec<T> {
         }
 
         Ok(vec)
+    }
+}
+
+macro_rules! tuple_impls {
+    ($(
+        $Tuple:ident {
+            $(($idx:tt) -> $T:ident)+
+        }
+    )+) => {
+        $(
+            impl<$($T: ByteBufferRead),+> ByteBufferRead for ($($T,)+)
+            {
+                #[inline]
+                fn read_from_buffer(buffer: &mut ByteBuffer) -> Result<Self> {
+                    Ok(($(match buffer.read::<$T>() {
+                        Ok(v) => v,
+                        Err(e) => return Err(ByteBufferError::OtherError {
+                            error: format!("{} occured at tuple read location {}", e, $idx),
+                        })
+                    },)+))
+                }
+
+                #[inline]
+                fn read_from_buffer_le(buffer: &mut ByteBuffer) -> Result<Self> {
+                    Ok(($(match buffer.read_le::<$T>() {
+                        Ok(v) => v,
+                        Err(e) => return Err(ByteBufferError::OtherError {
+                            error: format!("{} occured at tuple read location {}", e, $idx),
+                        })
+                    },)+))
+                }
+
+                #[inline]
+                fn read_from_buffer_be(buffer: &mut ByteBuffer) -> Result<Self> {
+                    Ok(($(match buffer.read_be::<$T>() {
+                        Ok(v) => v,
+                        Err(e) => return Err(ByteBufferError::OtherError {
+                            error: format!("{} occured at tuple read location {}", e, $idx),
+                        })
+                    },)+))
+                }
+            }
+        )+
+    }
+}
+
+tuple_impls! {
+    Tuple1 {
+        (0) -> A
+    }
+    Tuple2 {
+        (0) -> A
+        (1) -> B
+    }
+    Tuple3 {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+    }
+    Tuple4 {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+    }
+    Tuple5 {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+        (4) -> E
+    }
+    Tuple6 {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+        (4) -> E
+        (5) -> F
+    }
+    Tuple7 {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+        (4) -> E
+        (5) -> F
+        (6) -> G
+    }
+    Tuple8 {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+        (4) -> E
+        (5) -> F
+        (6) -> G
+        (7) -> H
+    }
+    Tuple9 {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+        (4) -> E
+        (5) -> F
+        (6) -> G
+        (7) -> H
+        (8) -> I
+    }
+    Tuple10 {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+        (4) -> E
+        (5) -> F
+        (6) -> G
+        (7) -> H
+        (8) -> I
+        (9) -> J
+    }
+    Tuple11 {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+        (4) -> E
+        (5) -> F
+        (6) -> G
+        (7) -> H
+        (8) -> I
+        (9) -> J
+        (10) -> K
+    }
+    Tuple12 {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+        (4) -> E
+        (5) -> F
+        (6) -> G
+        (7) -> H
+        (8) -> I
+        (9) -> J
+        (10) -> K
+        (11) -> L
     }
 }

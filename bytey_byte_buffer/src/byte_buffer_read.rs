@@ -8,6 +8,7 @@ mod option;
 mod phantom;
 mod result;
 mod string;
+mod time;
 mod tuple;
 
 pub use arrays::*;
@@ -18,6 +19,7 @@ pub use option::*;
 pub use phantom::*;
 pub use result::*;
 pub use string::*;
+pub use time::*;
 pub use tuple::*;
 
 pub trait ByteBufferRead {

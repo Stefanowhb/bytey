@@ -10,6 +10,7 @@ mod phantom;
 mod range;
 mod result;
 mod string;
+mod time;
 mod tuple;
 
 pub use arrays::*;
@@ -21,6 +22,7 @@ pub use phantom::*;
 pub use range::*;
 pub use result::*;
 pub use string::*;
+pub use time::*;
 pub use tuple::*;
 
 pub trait ByteBufferWrite {

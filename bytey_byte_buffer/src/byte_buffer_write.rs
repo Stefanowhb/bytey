@@ -188,7 +188,7 @@ where
     }
 }
 
-impl<'a, T: ByteBufferWrite> ByteBufferWrite for &Option<T>
+impl<'a, T: ByteBufferWrite> ByteBufferWrite for &'a Option<T>
 where
     &'a T: ByteBufferWrite + 'a,
 {

@@ -3,7 +3,10 @@ use crate::{
     byte_buffer_read::ByteBufferRead,
     error::{ByteBufferError, Result},
 };
-use std::mem::{self, MaybeUninit};
+use std::{
+    any::TypeId,
+    mem::{self, MaybeUninit},
+};
 
 //The Array read implementation is thanks to bincode. it was designed based on their work.
 //If we find any major bugs that could Affect them we should let them know and give them any fixes.
@@ -26,7 +29,7 @@ impl<T, const N: usize> Drop for Guard<'_, T, N> {
     }
 }
 
-impl<T: ByteBufferRead, const N: usize> ByteBufferRead for [T; N] {
+impl<T: ByteBufferRead + 'static, const N: usize> ByteBufferRead for [T; N] {
     #[inline]
     fn read_from_buffer(buffer: &mut ByteBuffer) -> Result<Self> {
         if N == 0 {
@@ -46,38 +49,46 @@ impl<T: ByteBufferRead, const N: usize> ByteBufferRead for [T; N] {
             });
         }
 
-        let mut array = unsafe { MaybeUninit::<[MaybeUninit<T>; N]>::uninit().assume_init() };
-        let mut guard = Guard {
-            array_mut: &mut array,
-            initialized: 0,
-        };
+        if TypeId::of::<u8>() == TypeId::of::<T>() {
+            let mut buf = [0u8; N];
+            buf[..N].copy_from_slice(buffer.read_slice(N)?);
+            let ptr = &mut buf as *mut _ as *mut [T; N];
 
-        for _ in 0..N {
-            let item = buffer.read::<T>()?;
-
-            // SAFETY: `guard.initialized` starts at 0, is increased by one in the
-            // loop and the loop is aborted once it reaches N (which is
-            // `array.len()`).
-            unsafe {
-                guard
-                    .array_mut
-                    .get_unchecked_mut(guard.initialized)
-                    .write(item);
-            }
-            guard.initialized += 1;
-        }
-
-        if guard.initialized == N {
-            mem::forget(guard);
-
-            // SAFETY: the condition above asserts that all elements are
-            // initialized.
-            let out = unsafe { (&array as *const _ as *const [T; N]).read() };
-            Ok(out)
+            Ok(unsafe { ptr.read() })
         } else {
-            Err(ByteBufferError::OtherError {
-                error: "Not all of the array was initialized".to_owned(),
-            })
+            let mut array = unsafe { MaybeUninit::<[MaybeUninit<T>; N]>::uninit().assume_init() };
+            let mut guard = Guard {
+                array_mut: &mut array,
+                initialized: 0,
+            };
+
+            for _ in 0..N {
+                let item = buffer.read::<T>()?;
+
+                // SAFETY: `guard.initialized` starts at 0, is increased by one in the
+                // loop and the loop is aborted once it reaches N (which is
+                // `array.len()`).
+                unsafe {
+                    guard
+                        .array_mut
+                        .get_unchecked_mut(guard.initialized)
+                        .write(item);
+                }
+                guard.initialized += 1;
+            }
+
+            if guard.initialized == N {
+                mem::forget(guard);
+
+                // SAFETY: the condition above asserts that all elements are
+                // initialized.
+                let out = unsafe { (&array as *const _ as *const [T; N]).read() };
+                Ok(out)
+            } else {
+                Err(ByteBufferError::OtherError {
+                    error: "Not all of the array was initialized".to_owned(),
+                })
+            }
         }
     }
 

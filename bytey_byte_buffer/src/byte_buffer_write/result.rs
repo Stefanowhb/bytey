@@ -5,11 +5,11 @@ impl<T: ByteBufferWrite, E: ByteBufferWrite> ByteBufferWrite for std::result::Re
     fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match self {
             Ok(v) => {
-                1u16.write_to_buffer(buffer)?;
+                1u8.write_to_buffer(buffer)?;
                 v.write_to_buffer(buffer)
             }
             Err(e) => {
-                2u16.write_to_buffer(buffer)?;
+                2u8.write_to_buffer(buffer)?;
                 e.write_to_buffer(buffer)
             }
         }
@@ -19,11 +19,11 @@ impl<T: ByteBufferWrite, E: ByteBufferWrite> ByteBufferWrite for std::result::Re
     fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match self {
             Ok(v) => {
-                1u16.write_to_buffer_le(buffer)?;
+                1u8.write_to_buffer_le(buffer)?;
                 v.write_to_buffer_le(buffer)
             }
             Err(e) => {
-                2u16.write_to_buffer_le(buffer)?;
+                2u8.write_to_buffer_le(buffer)?;
                 e.write_to_buffer_le(buffer)
             }
         }
@@ -33,11 +33,11 @@ impl<T: ByteBufferWrite, E: ByteBufferWrite> ByteBufferWrite for std::result::Re
     fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match self {
             Ok(v) => {
-                1u16.write_to_buffer_be(buffer)?;
+                1u8.write_to_buffer_be(buffer)?;
                 v.write_to_buffer_be(buffer)
             }
             Err(e) => {
-                2u16.write_to_buffer_be(buffer)?;
+                2u8.write_to_buffer_be(buffer)?;
                 e.write_to_buffer_be(buffer)
             }
         }
@@ -49,11 +49,11 @@ impl<T: ByteBufferWrite, E: ByteBufferWrite> ByteBufferWrite for &std::result::R
     fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match *self {
             Ok(v) => {
-                1u16.write_to_buffer(buffer)?;
+                1u8.write_to_buffer(buffer)?;
                 v.write_to_buffer(buffer)
             }
             Err(e) => {
-                2u16.write_to_buffer(buffer)?;
+                2u8.write_to_buffer(buffer)?;
                 e.write_to_buffer(buffer)
             }
         }
@@ -63,11 +63,11 @@ impl<T: ByteBufferWrite, E: ByteBufferWrite> ByteBufferWrite for &std::result::R
     fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match *self {
             Ok(v) => {
-                1u16.write_to_buffer_le(buffer)?;
+                1u8.write_to_buffer_le(buffer)?;
                 v.write_to_buffer_le(buffer)
             }
             Err(e) => {
-                2u16.write_to_buffer_le(buffer)?;
+                2u8.write_to_buffer_le(buffer)?;
                 e.write_to_buffer_le(buffer)
             }
         }
@@ -77,11 +77,11 @@ impl<T: ByteBufferWrite, E: ByteBufferWrite> ByteBufferWrite for &std::result::R
     fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match *self {
             Ok(v) => {
-                1u16.write_to_buffer_be(buffer)?;
+                1u8.write_to_buffer_be(buffer)?;
                 v.write_to_buffer_be(buffer)
             }
             Err(e) => {
-                2u16.write_to_buffer_be(buffer)?;
+                2u8.write_to_buffer_be(buffer)?;
                 e.write_to_buffer_be(buffer)
             }
         }
@@ -92,9 +92,9 @@ impl<E: ByteBufferWrite> ByteBufferWrite for std::result::Result<(), E> {
     #[inline]
     fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match self {
-            Ok(()) => 1u16.write_to_buffer(buffer),
+            Ok(()) => 1u8.write_to_buffer(buffer),
             Err(e) => {
-                2u16.write_to_buffer(buffer)?;
+                2u8.write_to_buffer(buffer)?;
                 e.write_to_buffer(buffer)
             }
         }
@@ -103,9 +103,9 @@ impl<E: ByteBufferWrite> ByteBufferWrite for std::result::Result<(), E> {
     #[inline]
     fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match self {
-            Ok(()) => 1u16.write_to_buffer_le(buffer),
+            Ok(()) => 1u8.write_to_buffer_le(buffer),
             Err(e) => {
-                2u16.write_to_buffer_le(buffer)?;
+                2u8.write_to_buffer_le(buffer)?;
                 e.write_to_buffer_le(buffer)
             }
         }
@@ -114,9 +114,9 @@ impl<E: ByteBufferWrite> ByteBufferWrite for std::result::Result<(), E> {
     #[inline]
     fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match self {
-            Ok(()) => 1u16.write_to_buffer_be(buffer),
+            Ok(()) => 1u8.write_to_buffer_be(buffer),
             Err(e) => {
-                2u16.write_to_buffer_be(buffer)?;
+                2u8.write_to_buffer_be(buffer)?;
                 e.write_to_buffer_be(buffer)
             }
         }
@@ -127,9 +127,9 @@ impl<E: ByteBufferWrite> ByteBufferWrite for &std::result::Result<(), E> {
     #[inline]
     fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match *self {
-            Ok(()) => 1u16.write_to_buffer(buffer),
+            Ok(()) => 1u8.write_to_buffer(buffer),
             Err(e) => {
-                2u16.write_to_buffer(buffer)?;
+                2u8.write_to_buffer(buffer)?;
                 e.write_to_buffer(buffer)
             }
         }
@@ -138,9 +138,9 @@ impl<E: ByteBufferWrite> ByteBufferWrite for &std::result::Result<(), E> {
     #[inline]
     fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match *self {
-            Ok(()) => 1u16.write_to_buffer_le(buffer),
+            Ok(()) => 1u8.write_to_buffer_le(buffer),
             Err(e) => {
-                2u16.write_to_buffer_le(buffer)?;
+                2u8.write_to_buffer_le(buffer)?;
                 e.write_to_buffer_le(buffer)
             }
         }
@@ -149,9 +149,9 @@ impl<E: ByteBufferWrite> ByteBufferWrite for &std::result::Result<(), E> {
     #[inline]
     fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
         match *self {
-            Ok(()) => 1u16.write_to_buffer_be(buffer),
+            Ok(()) => 1u8.write_to_buffer_be(buffer),
             Err(e) => {
-                2u16.write_to_buffer_be(buffer)?;
+                2u8.write_to_buffer_be(buffer)?;
                 e.write_to_buffer_be(buffer)
             }
         }

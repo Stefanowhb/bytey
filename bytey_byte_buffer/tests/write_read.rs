@@ -321,11 +321,11 @@ fn test_f64_write_read_le() {
 #[test]
 fn test_option_write_read() {
     let mut buffer =
-        ByteBuffer::with_capacity(std::mem::size_of::<u64>() + std::mem::size_of::<u16>()).unwrap();
+        ByteBuffer::with_capacity(std::mem::size_of::<u64>() + std::mem::size_of::<u8>()).unwrap();
     let value: u64 = u64::MAX / 2;
     let option = Some(value);
 
-    let _ = buffer.write(option);
+    let _ = buffer.write(option).unwrap();
     let _ = buffer.move_cursor(0);
 
     let read_option = buffer.read::<Option<u64>>().unwrap();
@@ -333,7 +333,7 @@ fn test_option_write_read() {
     assert_eq!(read_option, option);
 
     let _ = buffer.move_cursor(0);
-    assert_eq!(buffer.read::<u16>().unwrap(), 1);
+    assert_eq!(buffer.read::<u8>().unwrap(), 1);
     assert_eq!(buffer.read::<u64>().unwrap(), value);
 }
 
@@ -362,7 +362,7 @@ fn test_arr_write_read() {
 #[test]
 fn test_result_write_read() {
     let mut buffer =
-        ByteBuffer::with_capacity(std::mem::size_of::<usize>() + (std::mem::size_of::<u16>() * 30))
+        ByteBuffer::with_capacity(std::mem::size_of::<usize>() + (std::mem::size_of::<u8>() * 30))
             .unwrap();
     let value: Result<u16, u16> = Ok(5);
 
@@ -374,7 +374,7 @@ fn test_result_write_read() {
     assert_eq!(read_arr, value);
 
     let _ = buffer.move_cursor(0);
-    assert_eq!(buffer.read::<u16>().unwrap(), 1);
+    assert_eq!(buffer.read::<u8>().unwrap(), 1);
     assert_eq!(buffer.read::<u16>().unwrap(), 5);
 }
 

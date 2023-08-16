@@ -244,7 +244,7 @@ fn test_f32_write_read_le() {
     let value: f32 = f32::MAX / 2.0f32;
     let value_bytes = value.to_le_bytes();
 
-    let _ = buffer.write_le(&value);
+    let _ = buffer.write_le(value);
     let _ = buffer.move_cursor(0);
 
     assert_eq!(
@@ -269,7 +269,7 @@ fn test_f32_write_read_be() {
     let value: f32 = f32::MAX / 2.0f32;
     let value_bytes = value.to_be_bytes();
 
-    let _ = buffer.write_be(&value);
+    let _ = buffer.write_be(value);
     let _ = buffer.move_cursor(0);
 
     assert_eq!(
@@ -299,7 +299,7 @@ fn test_f64_write_read_le() {
     let value: f64 = f64::MAX / 2.0f64;
     let value_bytes = value.to_le_bytes();
 
-    let _ = buffer.write_le(&value);
+    let _ = buffer.write_le(value);
     let _ = buffer.move_cursor(0);
 
     assert_eq!(
@@ -319,12 +319,115 @@ fn test_f64_write_read_le() {
 }
 
 #[test]
+fn test_option_write_read() {
+    let mut buffer =
+        ByteBuffer::with_capacity(std::mem::size_of::<u64>() + std::mem::size_of::<u16>()).unwrap();
+    let value: u64 = u64::MAX / 2;
+    let option = Some(value);
+
+    let _ = buffer.write(option);
+    let _ = buffer.move_cursor(0);
+
+    let read_option = buffer.read::<Option<u64>>().unwrap();
+
+    assert_eq!(read_option, option);
+
+    let _ = buffer.move_cursor(0);
+    assert_eq!(buffer.read::<u16>().unwrap(), 1);
+    assert_eq!(buffer.read::<u64>().unwrap(), value);
+}
+
+#[test]
+fn test_arr_write_read() {
+    let mut buffer =
+        ByteBuffer::with_capacity(std::mem::size_of::<usize>() + (std::mem::size_of::<u16>() * 30))
+            .unwrap();
+    let value: [u16; 30] = [2; 30];
+
+    let _ = buffer.write(value);
+    let _ = buffer.move_cursor(0);
+
+    let read_arr = buffer.read::<[u16; 30]>().unwrap();
+
+    assert_eq!(read_arr, value);
+
+    let _ = buffer.move_cursor(0);
+    assert_eq!(buffer.read::<usize>().unwrap(), 30);
+
+    for _ in 0..30 {
+        assert_eq!(buffer.read::<u16>().unwrap(), 2);
+    }
+}
+
+#[test]
+fn test_result_write_read() {
+    let mut buffer =
+        ByteBuffer::with_capacity(std::mem::size_of::<usize>() + (std::mem::size_of::<u16>() * 30))
+            .unwrap();
+    let value: Result<u16, u16> = Ok(5);
+
+    let _ = buffer.write(value);
+    let _ = buffer.move_cursor(0);
+
+    let read_arr = buffer.read::<Result<u16, u16>>().unwrap();
+
+    assert_eq!(read_arr, value);
+
+    let _ = buffer.move_cursor(0);
+    assert_eq!(buffer.read::<u16>().unwrap(), 1);
+    assert_eq!(buffer.read::<u16>().unwrap(), 5);
+}
+
+#[test]
+fn test_tuple_write_read() {
+    let mut buffer =
+        ByteBuffer::with_capacity(std::mem::size_of::<usize>() + (std::mem::size_of::<u16>() * 30))
+            .unwrap();
+    let value: (u16, u32, u64, Option<u16>) = (1, 2, 3, Some(5));
+
+    let _ = buffer.write(value);
+    let _ = buffer.move_cursor(0);
+
+    let read_arr = buffer.read::<(u16, u32, u64, Option<u16>)>().unwrap();
+
+    assert_eq!(read_arr, value);
+
+    let _ = buffer.move_cursor(0);
+    assert_eq!(buffer.read::<u16>().unwrap(), 1);
+    assert_eq!(buffer.read::<u32>().unwrap(), 2);
+    assert_eq!(buffer.read::<u64>().unwrap(), 3);
+    assert_eq!(buffer.read::<Option<u16>>().unwrap(), Some(5));
+}
+
+#[test]
+fn test_vec_write_read() {
+    let mut buffer =
+        ByteBuffer::with_capacity(std::mem::size_of::<usize>() + (std::mem::size_of::<u16>() * 30))
+            .unwrap();
+    let value: Vec<u16> = vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+    let _ = buffer.write(&value);
+    let _ = buffer.move_cursor(0);
+
+    let read_arr = buffer.read::<Vec<u16>>().unwrap();
+
+    assert_eq!(read_arr, value);
+
+    let _ = buffer.move_cursor(0);
+    assert_eq!(buffer.read::<usize>().unwrap(), 10);
+
+    for i in 0..10 {
+        assert_eq!(buffer.read::<u16>().unwrap(), i);
+    }
+}
+
+#[test]
 fn test_f64_write_read_be() {
     let mut buffer = ByteBuffer::with_capacity(std::mem::size_of::<f64>()).unwrap();
     let value: f64 = f64::MAX / 2.0f64;
     let value_bytes = value.to_be_bytes();
 
-    let _ = buffer.write_be(&value);
+    let _ = buffer.write_be(value);
     let _ = buffer.move_cursor(0);
 
     assert_eq!(

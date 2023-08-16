@@ -1,4 +1,4 @@
-use crate::field_wrapper::FieldWrapper;
+use crate::field_wrapper::{FieldWrapper, is_skipped};
 use crate::source::{EnumSource, StructSource};
 use quote::quote;
 use syn::spanned::Spanned;
@@ -34,6 +34,10 @@ fn handle_struct(input: StructSource) -> proc_macro2::TokenStream {
     match input.fields {
         syn::Fields::Named(syn::FieldsNamed { named, .. }) => {
             for field in named {
+                if is_skipped(field) {
+                    continue;
+                }
+
                 fields.push(FieldWrapper {
                     field: Some(field.ident.as_ref().unwrap()),
                     index: None,
@@ -41,7 +45,11 @@ fn handle_struct(input: StructSource) -> proc_macro2::TokenStream {
             }
         }
         syn::Fields::Unnamed(syn::FieldsUnnamed { unnamed, .. }) => {
-            for (count, _) in unnamed.into_iter().enumerate() {
+            for (count, field) in unnamed.into_iter().enumerate() {
+                if is_skipped(field) {
+                    continue;
+                }
+
                 fields.push(FieldWrapper {
                     field: None,
                     index: Some(syn::Index::from(count)),

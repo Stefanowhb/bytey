@@ -26,4 +26,15 @@ pub enum ByteBufferError {
 
     #[error("Other Error: {error}")]
     OtherError { error: String },
+
+    #[error(transparent)]
+    UnicodeError(#[from] std::str::Utf8Error),
+
+    #[error("RefCellAlreadyBorrowed: {error} for type: {type_name}")]
+    RefCellAlreadyBorrowed {
+        /// The inner borrow error
+        error: String,
+        /// the type name of the RefCell being encoded that is currently borrowed.
+        type_name: &'static str,
+    },
 }

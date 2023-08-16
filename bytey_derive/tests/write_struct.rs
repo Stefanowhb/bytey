@@ -19,8 +19,8 @@ fn test_struct_named_write() {
         d: usize::MAX,
     };
 
-    buffer.write(val);
-    buffer.move_cursor(0);
+    buffer.write(val).unwrap();
+    buffer.move_cursor(0).unwrap();
 
     assert_eq!(
         [
@@ -41,8 +41,8 @@ fn test_struct_unnamed_write() {
     let mut buffer = ByteBuffer::new().unwrap();
     let val = Test(128, 255, -255, usize::MAX);
 
-    buffer.write(val);
-    buffer.move_cursor(0);
+    buffer.write(val).unwrap();
+    buffer.move_cursor(0).unwrap();
 
     assert_eq!(
         [

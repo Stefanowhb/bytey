@@ -10,5 +10,4 @@ categories = ["data-structures", "encoding", "network-programming"]
 license = "MIT"
 
 [dependencies]
-thiserror = "1.0.30"
-cfg-if = "1.0.0"
+thiserror = "1.0.46"

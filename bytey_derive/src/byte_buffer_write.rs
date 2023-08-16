@@ -1,4 +1,4 @@
-use crate::field_wrapper::{FieldWrapper, is_skipped};
+use crate::field_wrapper::{is_skipped, FieldWrapper};
 use crate::source::{EnumSource, StructSource};
 use quote::quote;
 use syn::spanned::Spanned;

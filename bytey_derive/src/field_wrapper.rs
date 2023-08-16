@@ -1,8 +1,6 @@
 use crate::symbols::*;
-use syn::{
-    Meta::{List, NameValue, Path},
-    NestedMeta,
-};
+use syn::punctuated::Punctuated;
+use syn::{Meta, Token};
 
 pub struct FieldWrapper<'a> {
     pub field: Option<&'a syn::Ident>,
@@ -20,37 +18,30 @@ impl quote::ToTokens for FieldWrapper<'_> {
 }
 
 pub fn is_skipped(field: &syn::Field) -> bool {
+    let mut ret = false;
+
     for meta_item in field.attrs.iter().flat_map(get_bytey_meta_items) {
         match meta_item {
-            NestedMeta::Meta(Path(word)) if word == SKIP => return true,
-            NestedMeta::Meta(_) => {
+            Meta::Path(word) if word == SKIP => ret = true,
+            Meta::Path(_) => {
                 panic!("Unexpected field attribute found in bytey. Only skip is supported")
             }
-            NestedMeta::Lit(_) => panic!("unexpected literal in bytey field attributes"),
+            _ => {}
         }
     }
 
-    false
+    ret
 }
 
-fn get_bytey_meta_items(attr: &syn::Attribute) -> Vec<syn::NestedMeta> {
-    if attr.path != BYTEY {
+fn get_bytey_meta_items(attr: &syn::Attribute) -> Vec<syn::Meta> {
+    if attr.path() != BYTEY {
         return Vec::new();
     }
 
-    match attr.parse_meta() {
-        Ok(List(meta)) => meta.nested.into_iter().collect(),
-        Ok(other) => match other {
-            Path(_) => panic!("expected #[bytey(...)]"),
-            List(_) => panic!(
-                "Error Structured named lists like derive(Copy, Clone) is not supported by bytey",
-            ),
-            NameValue(_) => panic!(
-                "Error: Name Value paires like feature = \"nightly\" are not support by bytey",
-            ),
-        },
+    match attr.parse_args_with(Punctuated::<Meta, Token![,]>::parse_terminated) {
+        Ok(nested) => nested.into_iter().collect(),
         Err(err) => {
-            panic!("Error in bytey derive {} ", err)
+            panic!("error #[bytey(...)]: {} ", err);
         }
     }
 }

@@ -11,7 +11,7 @@ license = "MIT"
 
 [dependencies]
 bytey_byte_buffer = { path = "../bytey_byte_buffer", version = "0.2.1" }
-bincode = "2.0.0-beta.2"
+bincode = "2.0.0-rc.3"
 
 [[test]]
 name = "bincode_serialize"

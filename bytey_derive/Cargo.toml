@@ -13,9 +13,9 @@ license = "MIT"
 proc-macro = true
 
 [dependencies]
-quote = "1.0.15"
-syn = "1.0.86"
-proc-macro2 = "1.0.36"
+quote = "1.0.32"
+syn = "2.0.28"
+proc-macro2 = "1.0.66"
 
 [dev-dependencies]
 bytey = { path = "../bytey" }

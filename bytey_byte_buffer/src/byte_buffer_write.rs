@@ -1,5 +1,4 @@
 use crate::{byte_buffer::ByteBuffer, error::Result};
-use cfg_if::cfg_if;
 
 mod arrays;
 mod bound;
@@ -46,17 +45,15 @@ macro_rules! impl_byte_buffer_write_types {
 
                 #[inline]
                 fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
-                    cfg_if! {
-                        if #[cfg(target_endian = "little")] {
-                            unsafe {
-                                buffer.write_slice(std::slice::from_raw_parts(self as *const $type as *const u8, std::mem::size_of::<$type>()))?;
-                            }
-                        } else {
-                            unsafe {
-                                let o = self.to_le_bytes();
-                                buffer.write_slice(std::slice::from_raw_parts(&o as *const u8, std::mem::size_of::<$type>()))?;
-                            }
-                        }
+                    #[cfg(target_endian = "little")]
+                    unsafe {
+                        buffer.write_slice(std::slice::from_raw_parts(self as *const $type as *const u8, std::mem::size_of::<$type>()))?;
+                    }
+
+                    #[cfg(not(target_endian = "little"))]
+                    unsafe {
+                        let o = self.to_le_bytes();
+                        buffer.write_slice(std::slice::from_raw_parts(&o as *const u8, std::mem::size_of::<$type>()))?;
                     }
 
                     Ok(())
@@ -64,17 +61,15 @@ macro_rules! impl_byte_buffer_write_types {
 
                 #[inline]
                 fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
-                    cfg_if! {
-                        if #[cfg(target_endian = "big")] {
-                            unsafe {
-                                buffer.write_slice(std::slice::from_raw_parts(self as *const $type as *const u8, std::mem::size_of::<$type>()))?;
-                            }
-                        } else {
-                            unsafe {
-                                let o = self.to_be_bytes();
-                                buffer.write_slice(std::slice::from_raw_parts(&o as *const u8, std::mem::size_of::<$type>()))?;
-                            }
-                        }
+                    #[cfg(target_endian = "big")]
+                    unsafe {
+                        buffer.write_slice(std::slice::from_raw_parts(self as *const $type as *const u8, std::mem::size_of::<$type>()))?;
+                    }
+
+                    #[cfg(not(target_endian = "big"))]
+                    unsafe {
+                        let o = self.to_be_bytes();
+                        buffer.write_slice(std::slice::from_raw_parts(&o as *const u8, std::mem::size_of::<$type>()))?;
                     }
 
                     Ok(())
@@ -93,17 +88,15 @@ macro_rules! impl_byte_buffer_write_types {
 
                 #[inline]
                 fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
-                    cfg_if! {
-                        if #[cfg(target_endian = "little")] {
-                            unsafe {
-                                buffer.write_slice(std::slice::from_raw_parts(*self as *const $type as *const u8, std::mem::size_of::<$type>()))?;
-                            }
-                        } else {
-                            unsafe {
-                                let o = self.to_le_bytes();
-                                buffer.write_slice(std::slice::from_raw_parts(&o as *const u8, std::mem::size_of::<$type>()))?;
-                            }
-                        }
+                    #[cfg(target_endian = "little")]
+                    unsafe {
+                        buffer.write_slice(std::slice::from_raw_parts(*self as *const $type as *const u8, std::mem::size_of::<$type>()))?;
+                    }
+
+                    #[cfg(not(target_endian = "little"))]
+                    unsafe {
+                        let o = self.to_le_bytes();
+                        buffer.write_slice(std::slice::from_raw_parts(&o as *const u8, std::mem::size_of::<$type>()))?;
                     }
 
                     Ok(())
@@ -111,17 +104,15 @@ macro_rules! impl_byte_buffer_write_types {
 
                 #[inline]
                 fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
-                    cfg_if! {
-                        if #[cfg(target_endian = "big")] {
-                            unsafe {
-                                buffer.write_slice(std::slice::from_raw_parts(*self as *const $type as *const u8, std::mem::size_of::<$type>()))?;
-                            }
-                        } else {
-                            unsafe {
-                                let o = self.to_be_bytes();
-                                buffer.write_slice(std::slice::from_raw_parts(&o as *const u8, std::mem::size_of::<$type>()))?;
-                            }
-                        }
+                    #[cfg(target_endian = "big")]
+                    unsafe {
+                        buffer.write_slice(std::slice::from_raw_parts(*self as *const $type as *const u8, std::mem::size_of::<$type>()))?;
+                    }
+
+                    #[cfg(not(target_endian = "big"))]
+                    unsafe {
+                        let o = self.to_be_bytes();
+                        buffer.write_slice(std::slice::from_raw_parts(&o as *const u8, std::mem::size_of::<$type>()))?;
                     }
 
                     Ok(())

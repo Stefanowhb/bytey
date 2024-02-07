@@ -10,4 +10,4 @@ categories = ["data-structures", "encoding", "network-programming"]
 license = "MIT"
 
 [dependencies]
-thiserror = "1.0.46"
+thiserror = "1.0.56"

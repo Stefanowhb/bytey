@@ -37,4 +37,10 @@ pub enum ByteBufferError {
         /// the type name of the RefCell being encoded that is currently borrowed.
         type_name: &'static str,
     },
+    #[error("The NonZero Type is a 0. Maybe you have it set to the wrong position in the struct?")]
+    NonZeroIsZero,
+    #[error(
+        "the value can not be a char. Maybe you have it set to the wrong position in the struct?"
+    )]
+    NotAChar,
 }

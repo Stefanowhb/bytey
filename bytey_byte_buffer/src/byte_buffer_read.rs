@@ -2,8 +2,12 @@ use crate::{byte_buffer::ByteBuffer, error::Result};
 
 mod arrays;
 mod bound;
+mod boxed;
 mod byte;
 mod cell;
+mod char;
+mod cow;
+mod num;
 mod option;
 mod phantom;
 mod result;

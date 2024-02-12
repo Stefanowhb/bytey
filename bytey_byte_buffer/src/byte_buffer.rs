@@ -100,15 +100,12 @@ impl ByteBuffer {
             return Err(ByteBufferError::MaxCapacity);
         }
 
-        let layout = unsafe { alloc::Layout::from_size_align_unchecked(capacity, 1) };
+        let layout = alloc::Layout::from_size_align(capacity, 1)
+            .map_err(|_| ByteBufferError::LayoutFailure { size: capacity })?;
 
-        let pointer = unsafe { alloc::alloc(layout) };
+        let new_ptr = unsafe { alloc::alloc(layout) };
 
-        if pointer.is_null() {
-            return Err(ByteBufferError::AllocationFailure { size: capacity });
-        }
-
-        let pointer = match NonNull::new(pointer as *mut u8) {
+        let pointer = match NonNull::new(new_ptr as *mut u8) {
             Some(p) => p,
             None => Err(ByteBufferError::AllocationFailure { size: capacity })?,
         };
@@ -151,19 +148,16 @@ impl ByteBuffer {
 
         let new_layout = alloc::Layout::from_size_align(capacity, 1)
             .map_err(|_| ByteBufferError::LayoutFailure { size: capacity })?;
+        let old_layout = alloc::Layout::from_size_align(self.cap, 1)
+            .map_err(|_| ByteBufferError::LayoutFailure { size: self.cap })?;
 
-        let new_ptr = if self.cap == 0 {
-            unsafe { alloc::alloc(new_layout) }
-        } else {
-            let old_layout = Layout::array::<u8>(self.cap)
-                .map_err(|_| ByteBufferError::LayoutFailure { size: self.cap })?;
-            let old_ptr = self.pointer.as_ptr() as *mut u8;
-            unsafe { alloc::realloc(old_ptr, old_layout, new_layout.size()) }
+        let old_ptr = self.pointer.as_ptr() as *mut u8;
+        let new_ptr = unsafe { alloc::realloc(old_ptr, old_layout, new_layout.size()) };
+
+        let pointer = match NonNull::new(new_ptr as *mut u8) {
+            Some(p) => p,
+            None => Err(ByteBufferError::AllocationFailure { size: capacity })?,
         };
-
-        if new_ptr.is_null() {
-            return Err(ByteBufferError::AllocationFailure { size: capacity });
-        }
 
         if self.length >= capacity {
             self.length = capacity;
@@ -172,11 +166,6 @@ impl ByteBuffer {
                 self.cursor = self.length;
             }
         }
-
-        let pointer = match NonNull::new(new_ptr as *mut u8) {
-            Some(p) => p,
-            None => Err(ByteBufferError::AllocationFailure { size: capacity })?,
-        };
 
         self.cap = capacity;
         self.pointer = pointer;
@@ -293,33 +282,7 @@ impl ByteBuffer {
                 .checked_next_power_of_two()
                 .ok_or(ByteBufferError::MaxCapacity)?;
 
-            if capacity > Self::MAX_SIZE {
-                return Err(ByteBufferError::MaxCapacity);
-            }
-
-            let new_layout = alloc::Layout::from_size_align(capacity, 1)
-                .map_err(|_| ByteBufferError::LayoutFailure { size: capacity })?;
-
-            let new_ptr = if self.cap == 0 {
-                unsafe { alloc::alloc(new_layout) }
-            } else {
-                let old_layout = Layout::array::<u8>(self.cap)
-                    .map_err(|_| ByteBufferError::LayoutFailure { size: self.cap })?;
-                let old_ptr = self.pointer.as_ptr() as *mut u8;
-                unsafe { alloc::realloc(old_ptr, old_layout, new_layout.size()) }
-            };
-
-            if new_ptr.is_null() {
-                return Err(ByteBufferError::AllocationFailure { size: capacity });
-            }
-
-            let pointer = match NonNull::new(new_ptr as *mut u8) {
-                Some(p) => p,
-                None => Err(ByteBufferError::AllocationFailure { size: capacity })?,
-            };
-
-            self.cap = capacity;
-            self.pointer = pointer;
+            self.resize(capacity)?;
         }
 
         unsafe {
@@ -708,7 +671,7 @@ impl Drop for ByteBuffer {
 
 impl Clone for ByteBuffer {
     fn clone(&self) -> Self {
-        let layout = Layout::array::<u8>(self.cap).unwrap();
+        let layout = alloc::Layout::from_size_align(self.cap, 1).unwrap();
         let pointer = unsafe { alloc::alloc(layout) };
         unsafe {
             ptr::copy(self.pointer.as_ptr(), pointer, self.length);

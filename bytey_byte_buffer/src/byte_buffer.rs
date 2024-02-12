@@ -36,6 +36,14 @@ pub struct ByteBuffer {
     pointer: *mut u8,
 }
 
+/// `ByteBuffer` are `Send` Becuase `u8` is `Send` because the data they
+/// reference is unaliased.
+unsafe impl Send for ByteBuffer {}
+
+/// `ByteBuffer` pointers are `Sync` if `u8` is `Sync` because the data they
+/// reference is unaliased.
+unsafe impl Sync for ByteBuffer {}
+
 impl ByteBuffer {
     /// The maximum size the [`ByteBuffer`] will allocate.
     ///

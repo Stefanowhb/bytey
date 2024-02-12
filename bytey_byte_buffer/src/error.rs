@@ -8,6 +8,9 @@ pub enum ByteBufferError {
     #[error("Failed to allocate {size} bytes")]
     AllocationFailure { size: usize },
 
+    #[error("Failed to Generate Layout for Capacity {size}")]
+    LayoutFailure { size: usize },
+
     #[error("Capacity cannot be less than 1 byte")]
     MinCapacity,
 

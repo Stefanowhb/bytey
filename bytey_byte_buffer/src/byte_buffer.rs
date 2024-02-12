@@ -105,7 +105,7 @@ impl ByteBuffer {
 
         let new_ptr = unsafe { alloc::alloc(layout) };
 
-        let pointer = match NonNull::new(new_ptr as *mut u8) {
+        let pointer = match NonNull::new(new_ptr) {
             Some(p) => p,
             None => Err(ByteBufferError::AllocationFailure { size: capacity })?,
         };
@@ -151,10 +151,10 @@ impl ByteBuffer {
         let old_layout = alloc::Layout::from_size_align(self.cap, 1)
             .map_err(|_| ByteBufferError::LayoutFailure { size: self.cap })?;
 
-        let old_ptr = self.pointer.as_ptr() as *mut u8;
-        let new_ptr = unsafe { alloc::realloc(old_ptr, old_layout, new_layout.size()) };
+        let new_ptr =
+            unsafe { alloc::realloc(self.pointer.as_ptr(), old_layout, new_layout.size()) };
 
-        let pointer = match NonNull::new(new_ptr as *mut u8) {
+        let pointer = match NonNull::new(new_ptr) {
             Some(p) => p,
             None => Err(ByteBufferError::AllocationFailure { size: capacity })?,
         };
@@ -681,7 +681,7 @@ impl Clone for ByteBuffer {
             cap: self.cap,
             length: self.length,
             cursor: self.cursor,
-            pointer: NonNull::new(pointer as *mut u8).unwrap(),
+            pointer: NonNull::new(pointer).unwrap(),
         }
     }
 }

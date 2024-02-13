@@ -1,9 +1,12 @@
 use crate::byte_buffer_read::ByteBufferRead;
 use crate::byte_buffer_write::ByteBufferWrite;
-use std::{alloc, ptr, slice};
+use std::{
+    alloc::{self, Layout},
+    ptr, slice,
+};
 
 use crate::error::{ByteBufferError, Result};
-
+use core::ptr::NonNull;
 /// A resizeable buffer to store data in.
 ///
 /// Provides a resizeable buffer with an initial capacity of N bytes.
@@ -30,10 +33,10 @@ use crate::error::{ByteBufferError, Result};
 ///
 #[derive(Debug)]
 pub struct ByteBuffer {
-    layout: alloc::Layout,
+    cap: usize,
     length: usize,
     cursor: usize,
-    pointer: *mut u8,
+    pointer: NonNull<u8>,
 }
 
 /// `ByteBuffer` are `Send` Becuase `u8` is `Send` because the data they
@@ -97,16 +100,18 @@ impl ByteBuffer {
             return Err(ByteBufferError::MaxCapacity);
         }
 
-        let layout = unsafe { alloc::Layout::from_size_align_unchecked(capacity, 1) };
+        let layout = alloc::Layout::from_size_align(capacity, 1)
+            .map_err(|_| ByteBufferError::LayoutFailure { size: capacity })?;
 
-        let pointer = unsafe { alloc::alloc(layout) };
+        let new_ptr = unsafe { alloc::alloc(layout) };
 
-        if pointer.is_null() {
-            return Err(ByteBufferError::AllocationFailure { size: capacity });
-        }
+        let pointer = match NonNull::new(new_ptr) {
+            Some(p) => p,
+            None => Err(ByteBufferError::AllocationFailure { size: capacity })?,
+        };
 
         Ok(Self {
-            layout,
+            cap: layout.size(),
             length: 0,
             cursor: 0,
             pointer,
@@ -141,12 +146,18 @@ impl ByteBuffer {
             return Err(ByteBufferError::MaxCapacity);
         }
 
-        let layout = unsafe { alloc::Layout::from_size_align_unchecked(capacity, 1) };
-        let pointer = unsafe { alloc::realloc(self.pointer, layout, capacity) };
+        let new_layout = alloc::Layout::from_size_align(capacity, 1)
+            .map_err(|_| ByteBufferError::LayoutFailure { size: capacity })?;
+        let old_layout = alloc::Layout::from_size_align(self.cap, 1)
+            .map_err(|_| ByteBufferError::LayoutFailure { size: self.cap })?;
 
-        if pointer.is_null() {
-            return Err(ByteBufferError::AllocationFailure { size: capacity });
-        }
+        let new_ptr =
+            unsafe { alloc::realloc(self.pointer.as_ptr(), old_layout, new_layout.size()) };
+
+        let pointer = match NonNull::new(new_ptr) {
+            Some(p) => p,
+            None => Err(ByteBufferError::AllocationFailure { size: capacity })?,
+        };
 
         if self.length >= capacity {
             self.length = capacity;
@@ -156,7 +167,7 @@ impl ByteBuffer {
             }
         }
 
-        self.layout = layout;
+        self.cap = capacity;
         self.pointer = pointer;
 
         Ok(self)
@@ -179,8 +190,7 @@ impl ByteBuffer {
     /// ```
     pub fn expand(&mut self, amount: usize) -> Result<&mut Self> {
         self.resize(
-            self.layout
-                .size()
+            self.cap
                 .checked_add(amount)
                 .ok_or(ByteBufferError::MaxCapacity)?,
         )
@@ -203,8 +213,7 @@ impl ByteBuffer {
     /// ```
     pub fn shrink(&mut self, amount: usize) -> Result<&mut Self> {
         self.resize(
-            self.layout
-                .size()
+            self.cap
                 .checked_sub(amount)
                 .ok_or(ByteBufferError::MinCapacity)?,
         )
@@ -238,7 +247,7 @@ impl ByteBuffer {
 
         ptr::copy_nonoverlapping(
             source.as_ptr(),
-            self.pointer.add(self.cursor),
+            self.pointer.as_ptr().add(self.cursor),
             source_length,
         );
         self.cursor += source.len();
@@ -268,26 +277,12 @@ impl ByteBuffer {
     /// buffer.write_slice(&values);
     /// ```
     pub fn write_slice(&mut self, source: &[u8]) -> Result<&mut Self> {
-        if self.cursor + source.len() > self.layout.size() {
+        if self.cursor + source.len() > self.cap {
             let capacity = (self.cursor + source.len())
                 .checked_next_power_of_two()
                 .ok_or(ByteBufferError::MaxCapacity)?;
 
-            if capacity > Self::MAX_SIZE {
-                return Err(ByteBufferError::MaxCapacity);
-            }
-
-            let layout = unsafe { alloc::Layout::from_size_align_unchecked(capacity, 1) };
-            let pointer = unsafe { alloc::realloc(self.pointer, layout, capacity) };
-
-            if pointer.is_null() {
-                return Err(ByteBufferError::AllocationFailure {
-                    size: layout.size(),
-                });
-            }
-
-            self.layout = layout;
-            self.pointer = pointer;
+            self.resize(capacity)?;
         }
 
         unsafe {
@@ -393,7 +388,7 @@ impl ByteBuffer {
     /// }
     ///```
     pub unsafe fn read_slice_unchecked(&mut self, size: usize) -> &[u8] {
-        let ret = slice::from_raw_parts(self.pointer.add(self.cursor), size);
+        let ret = slice::from_raw_parts(self.pointer.as_ptr().add(self.cursor), size);
         self.cursor += size;
 
         ret
@@ -622,7 +617,7 @@ impl ByteBuffer {
     /// println!("{}", buffer.capacity());
     /// ```
     pub fn capacity(&self) -> usize {
-        self.layout.size()
+        self.cap
     }
 
     /// Returns the current cursor position of the [`ByteBuffer`].
@@ -642,19 +637,6 @@ impl ByteBuffer {
         self.cursor
     }
 
-    /// Returns the [`layout`](alloc::Layout) of the [`ByteBuffer`].
-    ///
-    /// # Examples
-    /// ```
-    /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
-    ///
-    /// let mut buffer = ByteBuffer::new().unwrap();
-    /// let layout = buffer.layout();
-    /// ```
-    pub fn layout(&self) -> alloc::Layout {
-        self.layout
-    }
-
     /// Returns a const pointer to the allocation.
     ///
     /// # Safety
@@ -663,7 +645,7 @@ impl ByteBuffer {
     /// This method can result in undefined behaviour if the buffer is resized and the underlying heap allocator moves
     /// the pointer
     pub unsafe fn pointer(&self) -> *const u8 {
-        self.pointer
+        self.pointer.as_ptr()
     }
 
     /// Returns a mutable pointer to the allocation.
@@ -674,31 +656,32 @@ impl ByteBuffer {
     /// This method can result in undefined behaviour if the buffer is resized and the underlying heap allocator moves
     /// the pointer
     pub unsafe fn mut_pointer(&self) -> *mut u8 {
-        self.pointer
+        self.pointer.as_ptr()
     }
 }
 
 impl Drop for ByteBuffer {
     fn drop(&mut self) {
         unsafe {
-            alloc::dealloc(self.pointer, self.layout);
+            let layout = Layout::array::<u8>(self.cap).unwrap();
+            alloc::dealloc(self.pointer.as_ptr(), layout);
         }
     }
 }
 
 impl Clone for ByteBuffer {
     fn clone(&self) -> Self {
-        let layout = self.layout;
+        let layout = alloc::Layout::from_size_align(self.cap, 1).unwrap();
         let pointer = unsafe { alloc::alloc(layout) };
         unsafe {
-            ptr::copy(self.pointer, pointer, self.length);
+            ptr::copy(self.pointer.as_ptr(), pointer, self.length);
         }
 
         Self {
-            layout,
+            cap: self.cap,
             length: self.length,
             cursor: self.cursor,
-            pointer,
+            pointer: NonNull::new(pointer).unwrap(),
         }
     }
 }

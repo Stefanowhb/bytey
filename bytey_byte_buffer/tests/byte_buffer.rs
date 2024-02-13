@@ -142,6 +142,18 @@ fn test_write_slice_capacity() {
 
     let _ = buffer.write_slice(&i2.to_ne_bytes());
     assert_eq!(buffer.capacity(), 16);
+
+    let _ = buffer.write_slice(&i2.to_ne_bytes());
+    assert_eq!(buffer.capacity(), 16);
+
+    let _ = buffer.write_slice(&i2.to_ne_bytes());
+    assert_eq!(buffer.capacity(), 16);
+
+    let _ = buffer.write_slice(&i2.to_ne_bytes());
+    assert_eq!(buffer.capacity(), 16);
+
+    let _ = buffer.write_slice(&i2.to_ne_bytes());
+    assert_eq!(buffer.capacity(), 32);
 }
 
 #[test]

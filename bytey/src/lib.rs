@@ -53,10 +53,10 @@ pub use bytey_byte_buffer::byte_buffer::ByteBuffer;
 pub use bytey_byte_buffer::error::{ByteBufferError, Result};
 
 #[doc(inline)]
-pub use bytey_byte_buffer::byte_buffer_write::ByteBufferWrite;
+pub use bytey_byte_buffer::byte_buffer_write::{self, ByteBufferWrite};
 
 #[doc(inline)]
-pub use bytey_byte_buffer::byte_buffer_read::ByteBufferRead;
+pub use bytey_byte_buffer::byte_buffer_read::{self, ByteBufferRead};
 
 pub use bytey_derive::ByteBufferRead;
 pub use bytey_derive::ByteBufferWrite;

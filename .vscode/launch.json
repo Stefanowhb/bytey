@@ -1,0 +1,217 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'bytey'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=bytey"
+                ],
+                "filter": {
+                    "name": "bytey",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'bytey_bincode'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=bytey_bincode"
+                ],
+                "filter": {
+                    "name": "bytey_bincode",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug integration test 'bincode_serialize'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--test=bincode_serialize",
+                    "--package=bytey_bincode"
+                ],
+                "filter": {
+                    "name": "bincode_serialize",
+                    "kind": "test"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'bytey_byte_buffer'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=bytey_byte_buffer"
+                ],
+                "filter": {
+                    "name": "bytey_byte_buffer",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug integration test 'byte_buffer'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--test=byte_buffer",
+                    "--package=bytey_byte_buffer"
+                ],
+                "filter": {
+                    "name": "byte_buffer",
+                    "kind": "test"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug integration test 'write_read'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--test=write_read",
+                    "--package=bytey_byte_buffer"
+                ],
+                "filter": {
+                    "name": "write_read",
+                    "kind": "test"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug integration test 'read_enum'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--test=read_enum",
+                    "--package=bytey_derive"
+                ],
+                "filter": {
+                    "name": "read_enum",
+                    "kind": "test"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug integration test 'read_struct'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--test=read_struct",
+                    "--package=bytey_derive"
+                ],
+                "filter": {
+                    "name": "read_struct",
+                    "kind": "test"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug integration test 'skip_struct'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--test=skip_struct",
+                    "--package=bytey_derive"
+                ],
+                "filter": {
+                    "name": "skip_struct",
+                    "kind": "test"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug integration test 'write_enum'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--test=write_enum",
+                    "--package=bytey_derive"
+                ],
+                "filter": {
+                    "name": "write_enum",
+                    "kind": "test"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug integration test 'write_struct'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--test=write_struct",
+                    "--package=bytey_derive"
+                ],
+                "filter": {
+                    "name": "write_struct",
+                    "kind": "test"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

@@ -2,8 +2,12 @@ use crate::{byte_buffer::ByteBuffer, error::Result};
 
 mod arrays;
 mod bound;
+mod boxed;
 mod byte;
 mod cell;
+mod char;
+mod cow;
+mod num;
 mod option;
 mod phantom;
 mod range;
@@ -11,18 +15,6 @@ mod result;
 mod string;
 mod time;
 mod tuple;
-
-pub use arrays::*;
-pub use bound::*;
-pub use byte::*;
-pub use cell::*;
-pub use option::*;
-pub use phantom::*;
-pub use range::*;
-pub use result::*;
-pub use string::*;
-pub use time::*;
-pub use tuple::*;
 
 pub trait ByteBufferWrite {
     fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()>;

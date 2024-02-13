@@ -669,8 +669,8 @@ impl ByteBuffer {
         self.length() == 0
     }
 
-    /// Returns a new [`ByteBuffer`] of the given len with data at the old [`ByteBuffer`]'s Cursor
-    /// to the len of the New Buffer
+    /// Returns a new [`ByteBuffer`] with data at the old [`ByteBuffer`]'s Cursor
+    /// to the length of the New Buffer. This will move the old buffers cursor.
     ///
     /// # Errors & Behaviour
     /// See [`read_slice`](Self::read_slice), [`with_capacity`](Self::with_capacity) and [`write_slice`](Self::write_slice)
@@ -697,6 +697,61 @@ impl ByteBuffer {
         buffer.write_slice(bytes)?;
         buffer.cursor = 0;
         Ok(buffer)
+    }
+
+    /// Returns a slice of the entire [`ByteBuffer`] from cursor position 0.
+    ///
+    /// # Behaviour
+    /// The current cursor position will be self.length.
+    ///
+    /// # Examples
+    /// ```
+    /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
+    ///
+    /// let mut buffer = ByteBuffer::new().unwrap();
+    /// let value: u32 = 12345;
+    ///
+    /// buffer.write(&value);
+    ///
+    /// let slice = buffer.as_slice();
+    /// assert_eq!(slice.len(), 4);
+    /// ```
+    pub fn as_slice(&mut self) -> &[u8] {
+        self.cursor = 0;
+        unsafe { self.read_slice_unchecked(self.length()) }
+    }
+
+    /// Returns a slice of the entire [`ByteBuffer`] from a given cursor position to a given size.
+    ///
+    /// # Behaviour
+    /// The current cursor position will be the given cursor + given size.
+    ///
+    /// # Errors
+    /// - [`ByteBufferError::ReadOutOfBounds`] is returned if the result of the current cursor position + the given size exceeds the buffer's length
+    ///
+    /// # Examples
+    /// ```
+    /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
+    ///
+    /// let mut buffer = ByteBuffer::new().unwrap();
+    /// let value: u32 = 12345;
+    ///
+    /// buffer.write(&value);
+    ///
+    /// let slice = buffer.slice_from(0, 4).unwrap();
+    /// assert_eq!(slice.len(), 4);
+    /// ```
+    pub fn slice_from(&mut self, cursor: usize, size: usize) -> Result<&[u8]> {
+        if cursor + size > self.length {
+            return Err(ByteBufferError::ReadOutOfBounds {
+                length: self.length,
+                start: cursor,
+                end: cursor + size,
+            });
+        }
+
+        self.cursor = cursor;
+        Ok(unsafe { self.read_slice_unchecked(size) })
     }
 }
 

@@ -658,6 +658,13 @@ impl ByteBuffer {
     pub unsafe fn mut_pointer(&self) -> *mut u8 {
         self.pointer.as_ptr()
     }
+
+    /// Returns true if the length is 0
+    ///
+    #[inline]
+    pub fn is_empty(&self) -> bool {
+        self.length() == 0
+    }
 }
 
 impl Drop for ByteBuffer {

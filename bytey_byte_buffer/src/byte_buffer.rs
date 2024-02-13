@@ -524,6 +524,9 @@ impl ByteBuffer {
 
     /// Moves the current cursor position.
     ///
+    /// # Errors
+    /// - [`ByteBufferError::CursorOutOfBounds`] if the cursor exceeds the buffers length
+    ///
     /// # Examples
     /// ```
     /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
@@ -664,6 +667,36 @@ impl ByteBuffer {
     #[inline]
     pub fn is_empty(&self) -> bool {
         self.length() == 0
+    }
+
+    /// Returns a new [`ByteBuffer`] of the given len with data at the old [`ByteBuffer`]'s Cursor
+    /// to the len of the New Buffer
+    ///
+    /// # Errors & Behaviour
+    /// See [`read_slice`](Self::read_slice), [`with_capacity`](Self::with_capacity) and [`write_slice`](Self::write_slice)
+    ///
+    /// # Examples
+    /// ```
+    /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
+    ///
+    /// let mut buffer = ByteBuffer::new().unwrap();
+    /// let value: u32 = 12345;
+    ///
+    /// buffer.write(&value);
+    ///
+    /// buffer.move_cursor(0);
+    ///
+    /// let mut new_buffer = buffer.read_to_buffer(4).unwrap();
+    /// let value = new_buffer.read::<u32>().unwrap();
+    /// assert_eq!(value, 12345);
+    /// ```
+    #[inline]
+    pub fn read_to_buffer(&mut self, len: usize) -> Result<Self> {
+        let mut buffer = ByteBuffer::with_capacity(len)?;
+        let bytes = self.read_slice(len)?;
+        buffer.write_slice(bytes)?;
+        buffer.cursor = 0;
+        Ok(buffer)
     }
 }
 

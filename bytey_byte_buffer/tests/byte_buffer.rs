@@ -212,3 +212,19 @@ fn test_read_slice_cursor() {
 
     assert_eq!(buffer.cursor(), 2);
 }
+
+#[test]
+fn test_read_to_buffer() {
+    let mut buffer = ByteBuffer::with_capacity(std::mem::size_of::<u64>()).unwrap();
+    let value: u64 = 64;
+
+    let _ = buffer.write(value);
+    let _ = buffer.move_cursor(0);
+
+    let mut new_buffer = buffer.read_to_buffer(std::mem::size_of::<u64>()).unwrap();
+    let read_arr = new_buffer.read::<u64>().unwrap();
+
+    assert_eq!(read_arr, value);
+    assert_eq!(buffer.cursor(), 8);
+    assert_eq!(new_buffer.capacity(), buffer.capacity());
+}

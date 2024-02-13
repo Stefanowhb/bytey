@@ -108,22 +108,22 @@ fn test_expand_usize_overflow() {
 }
 
 #[test]
-fn test_shrink_min() {
+fn test_shrink_to_fit_min() {
     let mut buffer = ByteBuffer::new().unwrap();
 
     assert_eq!(
-        buffer.shrink(ByteBuffer::MIN_SIZE).err().unwrap(),
+        buffer.shrink_to_fit().err().unwrap(),
         ByteBufferError::MinCapacity
     );
     assert_eq!(buffer.capacity(), ByteBuffer::MIN_SIZE);
 }
 
 #[test]
-fn test_shrink_usize_underflow() {
+fn test_shrink_to() {
     let mut buffer = ByteBuffer::new().unwrap();
 
     assert_eq!(
-        buffer.shrink(ByteBuffer::MIN_SIZE + 1).err().unwrap(),
+        buffer.shrink_to(0).err().unwrap(),
         ByteBufferError::MinCapacity
     );
     assert_eq!(buffer.capacity(), ByteBuffer::MIN_SIZE);

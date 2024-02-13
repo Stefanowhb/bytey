@@ -2,6 +2,7 @@ use crate::byte_buffer_read::ByteBufferRead;
 use crate::byte_buffer_write::ByteBufferWrite;
 use std::{
     alloc::{self, Layout},
+    cmp::max,
     ptr, slice,
 };
 
@@ -196,11 +197,14 @@ impl ByteBuffer {
         )
     }
 
-    /// Shrinks the capacity of the [`ByteBuffer`] by the given amount.
+    /// Shrinks the capacity of the [`ByteBuffer`] with a lower bound. The lower bounds is set to 1 if 0.
+    /// The capacity will remain at least as large as both the length and the supplied min_capacity.
+    ///
+    /// If the current capacity is less than the lower limit, this is a no-op.
     ///
     /// # Errors
     /// - [`ByteBufferError::MinCapacity`] is returned if the given amount results in an underflow on capacity
-    /// or if the result of **capacity - amount** equals 0.
+    /// or if the result of **capacity - amount** equals 0. This will only occur if Length and min_capacity are both 0.
     /// - [`ByteBufferError::AllocationFailure`] is returned if the memory allocation failed due to any reason(see [`alloc::realloc`]).
     ///
     /// # Examples
@@ -209,14 +213,37 @@ impl ByteBuffer {
     ///
     /// let mut buffer = ByteBuffer::new().unwrap();
     ///
-    /// buffer.shrink(4);
+    /// buffer.shrink_to(4);
     /// ```
-    pub fn shrink(&mut self, amount: usize) -> Result<&mut Self> {
-        self.resize(
-            self.cap
-                .checked_sub(amount)
-                .ok_or(ByteBufferError::MinCapacity)?,
-        )
+    pub fn shrink_to(&mut self, min_capacity: usize) -> Result<&mut Self> {
+        if self.cap > min_capacity {
+            self.resize(max(min_capacity, self.length))?;
+        }
+
+        Ok(self)
+    }
+
+    /// Shrinks the capacity of the [`ByteBuffer`] as much as possible.
+    /// It will drop down as close as possible to the length but the allocator
+    /// may still inform the vector that there is space for a few more elements.
+    ///
+    /// # Errors
+    /// - [`ByteBufferError::AllocationFailure`] is returned if the memory allocation failed due to any reason(see [`alloc::realloc`]).
+    ///
+    /// # Examples
+    /// ```
+    /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
+    ///
+    /// let mut buffer = ByteBuffer::new().unwrap();
+    ///
+    /// buffer.shrink_to_fit();
+    /// ```
+    pub fn shrink_to_fit(&mut self) -> Result<&mut Self> {
+        if self.capacity() > self.length {
+            self.resize(max(self.length, Self::MIN_SIZE))?;
+        }
+
+        Ok(self)
     }
 
     /// Writes a slice of type [u8] to the [`ByteBuffer`] **without safety checks**.

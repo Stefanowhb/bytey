@@ -578,6 +578,25 @@ impl ByteBuffer {
         Ok(self)
     }
 
+    /// Moves the current cursor position to the length of the buffer.
+    ///
+    /// # Examples
+    /// ```
+    /// use bytey_byte_buffer::byte_buffer::ByteBuffer;
+    ///
+    /// let mut buffer = ByteBuffer::new().unwrap();
+    /// let value: u32 = 12345;
+    ///
+    /// buffer.write(&value);
+    ///
+    /// buffer.move_cursor();
+    /// buffer.move_cursor_to_end();
+    /// ```
+    pub fn move_cursor_to_end(&mut self) -> &mut Self {
+        self.cursor = self.length;
+        self
+    }
+
     /// Resets length without resizing array.
     ///
     /// # Behaviour

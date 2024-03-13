@@ -445,3 +445,27 @@ fn test_f64_write_read_be() {
         value_bytes
     );
 }
+
+#[test]
+fn test_bool_write_read() {
+    let mut buffer = ByteBuffer::with_capacity(2).unwrap();
+    let istrue = true;
+    let isfalse = false;
+
+    let _ = buffer.write(&istrue);
+    let _ = buffer.write(istrue);
+    let _ = buffer.write(&isfalse);
+    let _ = buffer.write(isfalse);
+    let _ = buffer.move_cursor(0);
+
+    let read_istrue_ref = buffer.read::<bool>().unwrap();
+    let read_istrue = buffer.read::<bool>().unwrap();
+
+    let read_isfalse_ref = buffer.read::<bool>().unwrap();
+    let read_isfalse = buffer.read::<bool>().unwrap();
+
+    assert_eq!(read_istrue_ref, istrue);
+    assert_eq!(read_istrue, istrue);
+    assert_eq!(read_isfalse_ref, isfalse);
+    assert_eq!(read_isfalse, isfalse);
+}

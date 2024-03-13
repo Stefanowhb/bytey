@@ -88,10 +88,8 @@ impl ByteBufferWrite for &i8 {
 impl ByteBufferWrite for bool {
     #[inline]
     fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
-        let data = *self as u8;
-        unsafe {
-            buffer.write_slice(slice::from_raw_parts(data as *const u8, 1))?;
-        }
+        let data = if *self == true { 1u8 } else { 0u8 };
+        buffer.write(data)?;
 
         Ok(())
     }
@@ -110,10 +108,8 @@ impl ByteBufferWrite for bool {
 impl ByteBufferWrite for &bool {
     #[inline]
     fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
-        let data = **self as u8;
-        unsafe {
-            buffer.write_slice(slice::from_raw_parts(data as *const u8, 1))?;
-        }
+        let data = if **self == true { 1u8 } else { 0u8 };
+        buffer.write(data)?;
 
         Ok(())
     }

@@ -1,5 +1,4 @@
 use crate::{byte_buffer::ByteBuffer, byte_buffer_read::ByteBufferRead, error::Result};
-use std::boxed::Box;
 
 impl<T: ByteBufferRead> ByteBufferRead for Box<T> {
     #[inline]

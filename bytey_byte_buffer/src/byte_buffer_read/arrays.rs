@@ -38,7 +38,7 @@ impl<T: ByteBufferRead + 'static, const N: usize> ByteBufferRead for [T; N] {
             });
         }
 
-        let size = buffer.read::<usize>()?;
+        let size = buffer.read::<u64>()? as usize;
 
         if size != N {
             return Err(ByteBufferError::OtherError {
@@ -100,7 +100,7 @@ impl<T: ByteBufferRead + 'static, const N: usize> ByteBufferRead for [T; N] {
             });
         }
 
-        let size = buffer.read_le::<usize>()?;
+        let size = buffer.read_le::<u64>()? as usize;
 
         if size != N {
             return Err(ByteBufferError::OtherError {
@@ -162,7 +162,7 @@ impl<T: ByteBufferRead + 'static, const N: usize> ByteBufferRead for [T; N] {
             });
         }
 
-        let size = buffer.read_be::<usize>()?;
+        let size = buffer.read_be::<u64>()? as usize;
 
         if size != N {
             return Err(ByteBufferError::OtherError {
@@ -220,7 +220,7 @@ impl<T: ByteBufferRead + 'static, const N: usize> ByteBufferRead for [T; N] {
 impl<T: ByteBufferRead> ByteBufferRead for Vec<T> {
     #[inline]
     fn read_from_buffer(buffer: &mut ByteBuffer) -> Result<Self> {
-        let size = buffer.read::<usize>()?;
+        let size = buffer.read::<u64>()? as usize;
 
         if size == 0 {
             return Ok(Vec::new());
@@ -237,7 +237,7 @@ impl<T: ByteBufferRead> ByteBufferRead for Vec<T> {
 
     #[inline]
     fn read_from_buffer_le(buffer: &mut ByteBuffer) -> Result<Self> {
-        let size = buffer.read_le::<usize>()?;
+        let size = buffer.read_le::<u64>()? as usize;
 
         if size == 0 {
             return Ok(Vec::new());
@@ -254,7 +254,7 @@ impl<T: ByteBufferRead> ByteBufferRead for Vec<T> {
 
     #[inline]
     fn read_from_buffer_be(buffer: &mut ByteBuffer) -> Result<Self> {
-        let size = buffer.read_be::<usize>()?;
+        let size = buffer.read_be::<u64>()? as usize;
 
         if size == 0 {
             return Ok(Vec::new());

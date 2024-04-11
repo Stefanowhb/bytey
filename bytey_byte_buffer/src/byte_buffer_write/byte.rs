@@ -88,7 +88,7 @@ impl ByteBufferWrite for &i8 {
 impl ByteBufferWrite for bool {
     #[inline]
     fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
-        let data = if *self == true { 1u8 } else { 0u8 };
+        let data = if *self { 1u8 } else { 0u8 };
         buffer.write(data)?;
 
         Ok(())
@@ -108,7 +108,7 @@ impl ByteBufferWrite for bool {
 impl ByteBufferWrite for &bool {
     #[inline]
     fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
-        let data = if **self == true { 1u8 } else { 0u8 };
+        let data = if **self { 1u8 } else { 0u8 };
         buffer.write(data)?;
 
         Ok(())

@@ -452,8 +452,10 @@ fn test_bool_write_read() {
     let istrue = true;
     let isfalse = false;
 
+    #[allow(clippy::needless_borrows_for_generic_args)]
     let _ = buffer.write(&istrue);
     let _ = buffer.write(istrue);
+    #[allow(clippy::needless_borrows_for_generic_args)]
     let _ = buffer.write(&isfalse);
     let _ = buffer.write(isfalse);
     let _ = buffer.move_cursor(0);

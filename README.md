@@ -18,7 +18,7 @@ A link to the documentation can be found [here](https://docs.rs/bytey/latest/byt
 To start using this crate all you have to do is add it to your ``Cargo.toml``:
 ```toml
 [dependencies]
-bytey = "0.3.0"
+bytey = "0.4.0"
 ```
 
 # Usage
@@ -81,18 +81,6 @@ fn main() {
 }
 ```
 Keep in mind that all the fields inside the struct or enum **must** implement the trait as well, else you will get an error.
-
-
-# Changelog
-
-- **0.3.0**
-  - Added derive macros for the ByteBufferWrite and ByteBufferRead traits
-
-
-- **0.2.0**
-  - Added feature-gated Bincode support
-  - Added Clone trait to ByteBuffer
-  - Added truncate method to ByteBuffer
 
 # Contributing
 Feel free to contribute by sending pull requests. For major changes or if you have an idea that could help improve Bytey, please open an issue!

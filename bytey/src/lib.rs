@@ -5,7 +5,7 @@
 //! To start using this crate all you have to do is add it to your **Cargo.toml**:
 //! ```toml
 //! [dependencies]
-//! bytey = "0.3.0"
+//! bytey = "0.4.0"
 //! ```
 //! # Usage
 //!```
@@ -60,7 +60,3 @@ pub use bytey_byte_buffer::byte_buffer_read::{self, ByteBufferRead};
 
 pub use bytey_derive::ByteBufferRead;
 pub use bytey_derive::ByteBufferWrite;
-
-#[cfg(feature = "bincode_serialize")]
-#[cfg_attr(docsrs, doc(cfg(feature = "bincode_serialize")))]
-pub use bytey_bincode::*;

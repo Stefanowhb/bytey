@@ -2,7 +2,7 @@
 name = "bytey"
 homepage = "https://github.com/Stefanowhb/bytey"
 repository = "https://github.com/Stefanowhb/bytey"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = "Bytey provides a convenient and easy to use byte storage"
 readme = "../README.md"
@@ -10,10 +10,6 @@ keywords = ["buffers", "io", "utility", "byte", "endian"]
 categories = ["data-structures", "encoding", "network-programming"]
 license = "MIT"
 
-[features]
-bincode_serialize = ["bytey_bincode"]
-
 [dependencies]
-bytey_byte_buffer = { path = "../bytey_byte_buffer", version = "0.2.1" }
-bytey_derive = { path = "../bytey_derive", version = "0.2.0" }
-bytey_bincode = { path = "../bytey_bincode", version = "0.1.1", optional = true }
+bytey_byte_buffer = { path = "../bytey_byte_buffer", version = "0.3.0" }
+bytey_derive = { path = "../bytey_derive", version = "0.3.0" }

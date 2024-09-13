@@ -2,17 +2,17 @@ use crate::{byte_buffer::ByteBuffer, byte_buffer_read::ByteBufferRead, error::Re
 
 impl ByteBufferRead for bool {
     #[inline]
-    fn read_from_buffer(buffer: &mut ByteBuffer) -> Result<bool> {
+    fn read_from_bytey_buffer(buffer: &mut ByteBuffer) -> Result<bool> {
         Ok(buffer.read::<u8>()? != 0)
     }
 
     #[inline]
-    fn read_from_buffer_le(buffer: &mut ByteBuffer) -> Result<bool> {
+    fn read_from_bytey_buffer_le(buffer: &mut ByteBuffer) -> Result<bool> {
         Ok(buffer.read::<u8>()? != 0)
     }
 
     #[inline]
-    fn read_from_buffer_be(buffer: &mut ByteBuffer) -> Result<bool> {
+    fn read_from_bytey_buffer_be(buffer: &mut ByteBuffer) -> Result<bool> {
         Ok(buffer.read::<u8>()? != 0)
     }
 }

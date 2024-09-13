@@ -3,17 +3,17 @@ use std::marker::PhantomData;
 
 impl<T> ByteBufferWrite for PhantomData<T> {
     #[inline]
-    fn write_to_buffer(&self, _buffer: &mut ByteBuffer) -> Result<()> {
+    fn write_to_bytey_buffer(&self, _buffer: &mut ByteBuffer) -> Result<()> {
         Ok(())
     }
 
     #[inline]
-    fn write_to_buffer_le(&self, _buffer: &mut ByteBuffer) -> Result<()> {
+    fn write_to_bytey_buffer_le(&self, _buffer: &mut ByteBuffer) -> Result<()> {
         Ok(())
     }
 
     #[inline]
-    fn write_to_buffer_be(&self, _buffer: &mut ByteBuffer) -> Result<()> {
+    fn write_to_bytey_buffer_be(&self, _buffer: &mut ByteBuffer) -> Result<()> {
         Ok(())
     }
 }

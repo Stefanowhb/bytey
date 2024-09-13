@@ -74,22 +74,22 @@ fn handle_struct(input: StructSource) -> proc_macro2::TokenStream {
     quote! {
         impl #impl_generics ::bytey::ByteBufferWrite for #ident #ty_generics #where_clause {
             #[inline]
-            fn write_to_buffer(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
-                #(self.#fields.write_to_buffer(buffer)?;)*
+            fn write_to_bytey_buffer(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
+                #(self.#fields.write_to_bytey_buffer(buffer)?;)*
 
                 Ok(())
             }
 
             #[inline]
-            fn write_to_buffer_le(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
-                #(self.#fields.write_to_buffer_le(buffer)?;)*
+            fn write_to_bytey_buffer_le(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
+                #(self.#fields.write_to_bytey_buffer_le(buffer)?;)*
 
                 Ok(())
             }
 
             #[inline]
-            fn write_to_buffer_be(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
-                #(self.#fields.write_to_buffer_be(buffer)?;)*
+            fn write_to_bytey_buffer_be(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
+                #(self.#fields.write_to_bytey_buffer_be(buffer)?;)*
 
                 Ok(())
             }
@@ -97,22 +97,22 @@ fn handle_struct(input: StructSource) -> proc_macro2::TokenStream {
 
         impl #impl_generics ::bytey::ByteBufferWrite for &#ident #ty_generics #where_clause {
             #[inline]
-            fn write_to_buffer(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
-                #(self.#fields.write_to_buffer(buffer)?;)*
+            fn write_to_bytey_buffer(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
+                #(self.#fields.write_to_bytey_buffer(buffer)?;)*
 
                 Ok(())
             }
 
             #[inline]
-            fn write_to_buffer_le(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
-                #(self.#fields.write_to_buffer_le(buffer)?;)*
+            fn write_to_bytey_buffer_le(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
+                #(self.#fields.write_to_bytey_buffer_le(buffer)?;)*
 
                 Ok(())
             }
 
             #[inline]
-            fn write_to_buffer_be(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
-                #(self.#fields.write_to_buffer_be(buffer)?;)*
+            fn write_to_bytey_buffer_be(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
+                #(self.#fields.write_to_bytey_buffer_be(buffer)?;)*
 
                 Ok(())
             }
@@ -154,22 +154,22 @@ fn handle_enum(input: EnumSource) -> proc_macro2::TokenStream {
 
         variants_native.push(quote! {
             #variant_match_case => {
-                #id.write_to_buffer(buffer)?;
-                #(#field_idents.write_to_buffer(buffer)?;)*
+                #id.write_to_bytey_buffer(buffer)?;
+                #(#field_idents.write_to_bytey_buffer(buffer)?;)*
             }
         });
 
         variants_le.push(quote! {
             #variant_match_case => {
-                #id.write_to_buffer_le(buffer)?;
-                #(#field_idents.write_to_buffer_le(buffer)?;)*
+                #id.write_to_bytey_buffer_le(buffer)?;
+                #(#field_idents.write_to_bytey_buffer_le(buffer)?;)*
             }
         });
 
         variants_be.push(quote! {
             #variant_match_case => {
-                #id.write_to_buffer_be(buffer)?;
-                #(#field_idents.write_to_buffer_be(buffer)?;)*
+                #id.write_to_bytey_buffer_be(buffer)?;
+                #(#field_idents.write_to_bytey_buffer_be(buffer)?;)*
             }
         });
 
@@ -181,7 +181,7 @@ fn handle_enum(input: EnumSource) -> proc_macro2::TokenStream {
     quote! {
         impl #impl_generics ::bytey::ByteBufferWrite for #enum_ident #ty_generics #where_clause {
             #[inline]
-            fn write_to_buffer(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
+            fn write_to_bytey_buffer(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
                 match self {
                     #(#variants_native),*
                 }
@@ -190,7 +190,7 @@ fn handle_enum(input: EnumSource) -> proc_macro2::TokenStream {
             }
 
             #[inline]
-            fn write_to_buffer_le(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
+            fn write_to_bytey_buffer_le(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
                 match self {
                     #(#variants_le),*
                 }
@@ -199,7 +199,7 @@ fn handle_enum(input: EnumSource) -> proc_macro2::TokenStream {
             }
 
             #[inline]
-            fn write_to_buffer_be(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
+            fn write_to_bytey_buffer_be(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
                 match self {
                     #(#variants_be),*
                 }
@@ -210,7 +210,7 @@ fn handle_enum(input: EnumSource) -> proc_macro2::TokenStream {
 
         impl #impl_generics ::bytey::ByteBufferWrite for &#enum_ident #ty_generics #where_clause {
             #[inline]
-            fn write_to_buffer(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
+            fn write_to_bytey_buffer(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
                 match self {
                     #(#variants_native),*
                 }
@@ -219,7 +219,7 @@ fn handle_enum(input: EnumSource) -> proc_macro2::TokenStream {
             }
 
             #[inline]
-            fn write_to_buffer_le(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
+            fn write_to_bytey_buffer_le(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
                 match self {
                     #(#variants_le),*
                 }
@@ -228,7 +228,7 @@ fn handle_enum(input: EnumSource) -> proc_macro2::TokenStream {
             }
 
             #[inline]
-            fn write_to_buffer_be(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
+            fn write_to_bytey_buffer_be(&self, buffer: &mut ::bytey::ByteBuffer) -> ::bytey::Result<()> {
                 match self {
                     #(#variants_be),*
                 }

@@ -6,7 +6,7 @@ use crate::{
 
 impl<T: ByteBufferRead, E: ByteBufferRead> ByteBufferRead for std::result::Result<T, E> {
     #[inline]
-    fn read_from_buffer(buffer: &mut ByteBuffer) -> Result<std::result::Result<T, E>> {
+    fn read_from_bytey_buffer(buffer: &mut ByteBuffer) -> Result<std::result::Result<T, E>> {
         Ok(match buffer.read::<u8>()? {
             1 => Ok(buffer.read::<T>()?),
             2 => Err(buffer.read::<E>()?),
@@ -19,7 +19,7 @@ impl<T: ByteBufferRead, E: ByteBufferRead> ByteBufferRead for std::result::Resul
     }
 
     #[inline]
-    fn read_from_buffer_le(buffer: &mut ByteBuffer) -> Result<std::result::Result<T, E>> {
+    fn read_from_bytey_buffer_le(buffer: &mut ByteBuffer) -> Result<std::result::Result<T, E>> {
         Ok(match buffer.read_le::<u8>()? {
             1 => Ok(buffer.read_le::<T>()?),
             2 => Err(buffer.read_le::<E>()?),
@@ -32,7 +32,7 @@ impl<T: ByteBufferRead, E: ByteBufferRead> ByteBufferRead for std::result::Resul
     }
 
     #[inline]
-    fn read_from_buffer_be(buffer: &mut ByteBuffer) -> Result<std::result::Result<T, E>> {
+    fn read_from_bytey_buffer_be(buffer: &mut ByteBuffer) -> Result<std::result::Result<T, E>> {
         Ok(match buffer.read_be::<u8>()? {
             1 => Ok(buffer.read_be::<T>()?),
             2 => Err(buffer.read_be::<E>()?),
@@ -47,7 +47,7 @@ impl<T: ByteBufferRead, E: ByteBufferRead> ByteBufferRead for std::result::Resul
 
 impl<E: ByteBufferRead> ByteBufferRead for std::result::Result<(), E> {
     #[inline]
-    fn read_from_buffer(buffer: &mut ByteBuffer) -> Result<std::result::Result<(), E>> {
+    fn read_from_bytey_buffer(buffer: &mut ByteBuffer) -> Result<std::result::Result<(), E>> {
         Ok(match buffer.read::<u8>()? {
             1 => Ok(()),
             2 => Err(buffer.read::<E>()?),
@@ -60,7 +60,7 @@ impl<E: ByteBufferRead> ByteBufferRead for std::result::Result<(), E> {
     }
 
     #[inline]
-    fn read_from_buffer_le(buffer: &mut ByteBuffer) -> Result<std::result::Result<(), E>> {
+    fn read_from_bytey_buffer_le(buffer: &mut ByteBuffer) -> Result<std::result::Result<(), E>> {
         Ok(match buffer.read_le::<u8>()? {
             1 => Ok(()),
             2 => Err(buffer.read_le::<E>()?),
@@ -73,7 +73,7 @@ impl<E: ByteBufferRead> ByteBufferRead for std::result::Result<(), E> {
     }
 
     #[inline]
-    fn read_from_buffer_be(buffer: &mut ByteBuffer) -> Result<std::result::Result<(), E>> {
+    fn read_from_bytey_buffer_be(buffer: &mut ByteBuffer) -> Result<std::result::Result<(), E>> {
         Ok(match buffer.read_be::<u8>()? {
             1 => Ok(()),
             2 => Err(buffer.read_be::<E>()?),

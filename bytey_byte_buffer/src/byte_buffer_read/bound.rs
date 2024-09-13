@@ -7,7 +7,7 @@ use std::ops::Bound;
 
 impl<T: ByteBufferRead> ByteBufferRead for Bound<T> {
     #[inline]
-    fn read_from_buffer(buffer: &mut ByteBuffer) -> Result<Self> {
+    fn read_from_bytey_buffer(buffer: &mut ByteBuffer) -> Result<Self> {
         match buffer.read::<u8>()? {
             0 => Ok(Bound::Unbounded),
             1 => Ok(Bound::Included(buffer.read::<T>()?)),
@@ -19,7 +19,7 @@ impl<T: ByteBufferRead> ByteBufferRead for Bound<T> {
     }
 
     #[inline]
-    fn read_from_buffer_le(buffer: &mut ByteBuffer) -> Result<Self> {
+    fn read_from_bytey_buffer_le(buffer: &mut ByteBuffer) -> Result<Self> {
         match buffer.read_le::<u8>()? {
             0 => Ok(Bound::Unbounded),
             1 => Ok(Bound::Included(buffer.read_le::<T>()?)),
@@ -31,7 +31,7 @@ impl<T: ByteBufferRead> ByteBufferRead for Bound<T> {
     }
 
     #[inline]
-    fn read_from_buffer_be(buffer: &mut ByteBuffer) -> Result<Self> {
+    fn read_from_bytey_buffer_be(buffer: &mut ByteBuffer) -> Result<Self> {
         match buffer.read_be::<u8>()? {
             0 => Ok(Bound::Unbounded),
             1 => Ok(Bound::Included(buffer.read_be::<T>()?)),

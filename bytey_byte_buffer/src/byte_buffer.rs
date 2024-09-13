@@ -178,7 +178,7 @@ impl ByteBuffer {
     ///
     /// # Errors
     /// - [`ByteBufferError::MaxCapacity`] is returned if the given amount results in an overflow on capacity
-    /// or if the result of **capacity + amount** exceeds [`MAX_SIZE`](Self::MAX_SIZE).
+    ///   or if the result of **capacity + amount** exceeds [`MAX_SIZE`](Self::MAX_SIZE).
     /// - [`ByteBufferError::AllocationFailure`] is returned if the memory allocation failed due to any reason(see [`alloc::realloc`]).
     ///
     /// # Examples
@@ -204,7 +204,7 @@ impl ByteBuffer {
     ///
     /// # Errors
     /// - [`ByteBufferError::MinCapacity`] is returned if the given amount results in an underflow on capacity
-    /// or if the result of **capacity - amount** equals 0. This will only occur if Length and min_capacity are both 0.
+    ///   or if the result of **capacity - amount** equals 0. This will only occur if Length and min_capacity are both 0.
     /// - [`ByteBufferError::AllocationFailure`] is returned if the memory allocation failed due to any reason(see [`alloc::realloc`]).
     ///
     /// # Examples
@@ -286,12 +286,12 @@ impl ByteBuffer {
     ///
     /// # Behaviour
     /// - If the result of the **current cursor position + length of the slice** exceeds the capacity of the buffer,
-    /// the buffer will resize to the next power of two that fits the result.
+    ///   the buffer will resize to the next power of two that fits the result.
     /// - The current cursor position will be increased by the length of the slice.
     ///
     /// # Errors
     /// - [`ByteBufferError::MaxCapacity`] is returned if the buffer has to resize to a capacity larger than [`MAX_SIZE`](Self::MAX_SIZE)
-    /// or if the resulting capacity overflows.
+    ///   or if the resulting capacity overflows.
     /// - [`ByteBufferError::AllocationFailure`] is returned if the memory allocation failed due to any reason(see [`alloc::realloc`]).
     ///
     /// # Examples
@@ -340,7 +340,7 @@ impl ByteBuffer {
     /// buffer.write(&value);
     /// ```
     pub fn write<T: ByteBufferWrite>(&mut self, source: T) -> Result<&mut Self> {
-        source.write_to_buffer(self)?;
+        source.write_to_bytey_buffer(self)?;
 
         Ok(self)
     }
@@ -362,7 +362,7 @@ impl ByteBuffer {
     /// buffer.write_le(&value);
     /// ```
     pub fn write_le<T: ByteBufferWrite>(&mut self, source: T) -> Result<&mut Self> {
-        source.write_to_buffer_le(self)?;
+        source.write_to_bytey_buffer_le(self)?;
 
         Ok(self)
     }
@@ -384,7 +384,7 @@ impl ByteBuffer {
     /// buffer.write_be(&value);
     /// ```
     pub fn write_be<T: ByteBufferWrite>(&mut self, source: T) -> Result<&mut Self> {
-        source.write_to_buffer_be(self)?;
+        source.write_to_bytey_buffer_be(self)?;
 
         Ok(self)
     }
@@ -474,7 +474,7 @@ impl ByteBuffer {
     /// let x: u32 = buffer.read().unwrap();
     /// ```
     pub fn read<T: ByteBufferRead>(&mut self) -> Result<T> {
-        T::read_from_buffer(self)
+        T::read_from_bytey_buffer(self)
     }
 
     /// Reads a value of type T that implements the [`ByteBufferRead`] trait from the buffer in **little endian** ordering.
@@ -498,7 +498,7 @@ impl ByteBuffer {
     /// let x: u32 = buffer.read_le().unwrap();
     /// ```
     pub fn read_le<T: ByteBufferRead>(&mut self) -> Result<T> {
-        T::read_from_buffer_le(self)
+        T::read_from_bytey_buffer_le(self)
     }
 
     /// Reads a value of type T that implements the [`ByteBufferRead`] trait from the buffer in **big endian** ordering.
@@ -522,7 +522,7 @@ impl ByteBuffer {
     /// let x: u32 = buffer.read_be().unwrap();
     /// ```
     pub fn read_be<T: ByteBufferRead>(&mut self) -> Result<T> {
-        T::read_from_buffer_be(self)
+        T::read_from_bytey_buffer_be(self)
     }
 
     /// Moves the current cursor position **without safety checks**.

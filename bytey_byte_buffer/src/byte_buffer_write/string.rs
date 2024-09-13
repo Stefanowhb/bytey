@@ -2,10 +2,10 @@ use crate::{byte_buffer::ByteBuffer, byte_buffer_write::ByteBufferWrite, error::
 
 impl ByteBufferWrite for str {
     #[inline]
-    fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
+    fn write_to_bytey_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
         let bytestr = self.as_bytes();
         let len = bytestr.len();
-        len.write_to_buffer(buffer)?;
+        len.write_to_bytey_buffer(buffer)?;
 
         if len > 0 {
             buffer.write_slice(bytestr)?;
@@ -15,10 +15,10 @@ impl ByteBufferWrite for str {
     }
 
     #[inline]
-    fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
+    fn write_to_bytey_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
         let bytestr = self.as_bytes();
         let len = bytestr.len();
-        len.write_to_buffer_le(buffer)?;
+        len.write_to_bytey_buffer_le(buffer)?;
 
         if len > 0 {
             buffer.write_slice(bytestr)?;
@@ -28,10 +28,10 @@ impl ByteBufferWrite for str {
     }
 
     #[inline]
-    fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
+    fn write_to_bytey_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
         let bytestr = self.as_bytes();
         let len = bytestr.len();
-        len.write_to_buffer_be(buffer)?;
+        len.write_to_bytey_buffer_be(buffer)?;
 
         if len > 0 {
             buffer.write_slice(bytestr)?;
@@ -43,10 +43,10 @@ impl ByteBufferWrite for str {
 
 impl<'a> ByteBufferWrite for &'a str {
     #[inline]
-    fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
+    fn write_to_bytey_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
         let bytestr = self.as_bytes();
         let len = bytestr.len();
-        len.write_to_buffer(buffer)?;
+        len.write_to_bytey_buffer(buffer)?;
 
         if len > 0 {
             buffer.write_slice(bytestr)?;
@@ -56,10 +56,10 @@ impl<'a> ByteBufferWrite for &'a str {
     }
 
     #[inline]
-    fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
+    fn write_to_bytey_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
         let bytestr = self.as_bytes();
         let len = bytestr.len();
-        len.write_to_buffer_le(buffer)?;
+        len.write_to_bytey_buffer_le(buffer)?;
 
         if len > 0 {
             buffer.write_slice(bytestr)?;
@@ -69,10 +69,10 @@ impl<'a> ByteBufferWrite for &'a str {
     }
 
     #[inline]
-    fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
+    fn write_to_bytey_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
         let bytestr = self.as_bytes();
         let len = bytestr.len();
-        len.write_to_buffer_be(buffer)?;
+        len.write_to_bytey_buffer_be(buffer)?;
 
         if len > 0 {
             buffer.write_slice(bytestr)?;
@@ -84,10 +84,10 @@ impl<'a> ByteBufferWrite for &'a str {
 
 impl ByteBufferWrite for String {
     #[inline]
-    fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
+    fn write_to_bytey_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
         let bytestr = self.as_bytes();
         let len = bytestr.len();
-        len.write_to_buffer(buffer)?;
+        len.write_to_bytey_buffer(buffer)?;
 
         if len > 0 {
             buffer.write_slice(bytestr)?;
@@ -97,10 +97,10 @@ impl ByteBufferWrite for String {
     }
 
     #[inline]
-    fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
+    fn write_to_bytey_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
         let bytestr = self.as_bytes();
         let len = bytestr.len();
-        len.write_to_buffer_le(buffer)?;
+        len.write_to_bytey_buffer_le(buffer)?;
 
         if len > 0 {
             buffer.write_slice(bytestr)?;
@@ -110,10 +110,10 @@ impl ByteBufferWrite for String {
     }
 
     #[inline]
-    fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
+    fn write_to_bytey_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
         let bytestr = self.as_bytes();
         let len = bytestr.len();
-        len.write_to_buffer_be(buffer)?;
+        len.write_to_bytey_buffer_be(buffer)?;
 
         if len > 0 {
             buffer.write_slice(bytestr)?;
@@ -125,10 +125,10 @@ impl ByteBufferWrite for String {
 
 impl ByteBufferWrite for &String {
     #[inline]
-    fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
+    fn write_to_bytey_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
         let bytestr = self.as_bytes();
         let len = bytestr.len();
-        len.write_to_buffer(buffer)?;
+        len.write_to_bytey_buffer(buffer)?;
 
         if len > 0 {
             buffer.write_slice(bytestr)?;
@@ -138,10 +138,10 @@ impl ByteBufferWrite for &String {
     }
 
     #[inline]
-    fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
+    fn write_to_bytey_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
         let bytestr = self.as_bytes();
         let len = bytestr.len();
-        len.write_to_buffer_le(buffer)?;
+        len.write_to_bytey_buffer_le(buffer)?;
 
         if len > 0 {
             buffer.write_slice(bytestr)?;
@@ -151,10 +151,10 @@ impl ByteBufferWrite for &String {
     }
 
     #[inline]
-    fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
+    fn write_to_bytey_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
         let bytestr = self.as_bytes();
         let len = bytestr.len();
-        len.write_to_buffer_be(buffer)?;
+        len.write_to_bytey_buffer_be(buffer)?;
 
         if len > 0 {
             buffer.write_slice(bytestr)?;

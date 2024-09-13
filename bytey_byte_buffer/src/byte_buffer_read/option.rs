@@ -6,7 +6,7 @@ use crate::{
 
 impl<T: ByteBufferRead> ByteBufferRead for Option<T> {
     #[inline]
-    fn read_from_buffer(buffer: &mut ByteBuffer) -> Result<Option<T>> {
+    fn read_from_bytey_buffer(buffer: &mut ByteBuffer) -> Result<Option<T>> {
         let data = match buffer.read::<u8>()? {
             1 => Some(buffer.read::<T>()?),
             2 => None,
@@ -21,7 +21,7 @@ impl<T: ByteBufferRead> ByteBufferRead for Option<T> {
     }
 
     #[inline]
-    fn read_from_buffer_le(buffer: &mut ByteBuffer) -> Result<Option<T>> {
+    fn read_from_bytey_buffer_le(buffer: &mut ByteBuffer) -> Result<Option<T>> {
         let data = match buffer.read_le::<u8>()? {
             1 => Some(buffer.read_le::<T>()?),
             2 => None,
@@ -36,7 +36,7 @@ impl<T: ByteBufferRead> ByteBufferRead for Option<T> {
     }
 
     #[inline]
-    fn read_from_buffer_be(buffer: &mut ByteBuffer) -> Result<Option<T>> {
+    fn read_from_bytey_buffer_be(buffer: &mut ByteBuffer) -> Result<Option<T>> {
         let data = match buffer.read_be::<u8>()? {
             1 => Some(buffer.read_be::<T>()?),
             2 => None,

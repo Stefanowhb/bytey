@@ -17,9 +17,9 @@ mod time;
 mod tuple;
 
 pub trait ByteBufferWrite {
-    fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()>;
-    fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()>;
-    fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()>;
+    fn write_to_bytey_buffer(&self, buffer: &mut ByteBuffer) -> Result<()>;
+    fn write_to_bytey_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()>;
+    fn write_to_bytey_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()>;
 }
 
 macro_rules! impl_byte_buffer_write_types {
@@ -27,7 +27,7 @@ macro_rules! impl_byte_buffer_write_types {
         $(
             impl ByteBufferWrite for $type {
                 #[inline]
-                fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
+                fn write_to_bytey_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
                     unsafe {
                         buffer.write_slice(std::slice::from_raw_parts(self as *const $type as *const u8, std::mem::size_of::<$type>()))?;
                     }
@@ -36,7 +36,7 @@ macro_rules! impl_byte_buffer_write_types {
                 }
 
                 #[inline]
-                fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
+                fn write_to_bytey_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
                     #[cfg(target_endian = "little")]
                     unsafe {
                         buffer.write_slice(std::slice::from_raw_parts(self as *const $type as *const u8, std::mem::size_of::<$type>()))?;
@@ -52,7 +52,7 @@ macro_rules! impl_byte_buffer_write_types {
                 }
 
                 #[inline]
-                fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
+                fn write_to_bytey_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
                     #[cfg(target_endian = "big")]
                     unsafe {
                         buffer.write_slice(std::slice::from_raw_parts(self as *const $type as *const u8, std::mem::size_of::<$type>()))?;
@@ -70,7 +70,7 @@ macro_rules! impl_byte_buffer_write_types {
 
             impl ByteBufferWrite for &$type {
                 #[inline]
-                fn write_to_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
+                fn write_to_bytey_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
                     unsafe {
                         buffer.write_slice(std::slice::from_raw_parts(*self as *const $type as *const u8, std::mem::size_of::<$type>()))?;
                     }
@@ -79,7 +79,7 @@ macro_rules! impl_byte_buffer_write_types {
                 }
 
                 #[inline]
-                fn write_to_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
+                fn write_to_bytey_buffer_le(&self, buffer: &mut ByteBuffer) -> Result<()> {
                     #[cfg(target_endian = "little")]
                     unsafe {
                         buffer.write_slice(std::slice::from_raw_parts(*self as *const $type as *const u8, std::mem::size_of::<$type>()))?;
@@ -95,7 +95,7 @@ macro_rules! impl_byte_buffer_write_types {
                 }
 
                 #[inline]
-                fn write_to_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
+                fn write_to_bytey_buffer_be(&self, buffer: &mut ByteBuffer) -> Result<()> {
                     #[cfg(target_endian = "big")]
                     unsafe {
                         buffer.write_slice(std::slice::from_raw_parts(*self as *const $type as *const u8, std::mem::size_of::<$type>()))?;

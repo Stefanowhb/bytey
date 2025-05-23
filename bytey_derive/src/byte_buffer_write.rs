@@ -142,7 +142,7 @@ fn handle_enum(input: EnumSource) -> proc_macro2::TokenStream {
             syn::Fields::Unnamed(syn::FieldsUnnamed { unnamed, .. }) => {
                 for (count, field) in unnamed.into_iter().enumerate() {
                     field_idents.push(syn::Ident::new(
-                        format!("val{}", count).as_str(),
+                        format!("val{count}").as_str(),
                         field.span(),
                     ));
                 }

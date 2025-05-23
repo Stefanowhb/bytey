@@ -37,7 +37,7 @@ fn new_duration(secs: u64, nanos: u32) -> Result<Duration> {
         .is_none()
     {
         return Err(ByteBufferError::OtherError {
-            error: format!("Invalid Duration: secs: {} nanos: {}", secs, nanos),
+            error: format!("Invalid Duration: secs: {secs} nanos: {nanos}"),
         });
     }
 

@@ -42,10 +42,7 @@ impl<T: ByteBufferRead + 'static, const N: usize> ByteBufferRead for [T; N] {
 
         if size != N {
             return Err(ByteBufferError::OtherError {
-                error: format!(
-                    "Invalid size in buffer for [T; {}]. Should be [T; {}]?",
-                    N, size
-                ),
+                error: format!("Invalid size in buffer for [T; {N}]. Should be [T; {size}]?",),
             });
         }
 
@@ -104,10 +101,7 @@ impl<T: ByteBufferRead + 'static, const N: usize> ByteBufferRead for [T; N] {
 
         if size != N {
             return Err(ByteBufferError::OtherError {
-                error: format!(
-                    "Invalid size in buffer for [T; {}]. Should be [T; {}]?",
-                    N, size
-                ),
+                error: format!("Invalid size in buffer for [T; {N}]. Should be [T; {size}]?",),
             });
         }
 
@@ -166,10 +160,7 @@ impl<T: ByteBufferRead + 'static, const N: usize> ByteBufferRead for [T; N] {
 
         if size != N {
             return Err(ByteBufferError::OtherError {
-                error: format!(
-                    "Invalid size in buffer for [T; {}]. Should be [T; {}]?",
-                    N, size
-                ),
+                error: format!("Invalid size in buffer for [T; {N}]. Should be [T; {size}]?",),
             });
         }
 

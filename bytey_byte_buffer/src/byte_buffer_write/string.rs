@@ -41,7 +41,7 @@ impl ByteBufferWrite for str {
     }
 }
 
-impl<'a> ByteBufferWrite for &'a str {
+impl ByteBufferWrite for &'_ str {
     #[inline]
     fn write_to_bytey_buffer(&self, buffer: &mut ByteBuffer) -> Result<()> {
         let bytestr = self.as_bytes();

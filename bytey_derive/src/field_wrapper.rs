@@ -41,7 +41,7 @@ fn get_bytey_meta_items(attr: &syn::Attribute) -> Vec<syn::Meta> {
     match attr.parse_args_with(Punctuated::<Meta, Token![,]>::parse_terminated) {
         Ok(nested) => nested.into_iter().collect(),
         Err(err) => {
-            panic!("error #[bytey(...)]: {} ", err);
+            panic!("error #[bytey(...)]: {err} ");
         }
     }
 }

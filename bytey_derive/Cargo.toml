@@ -3,7 +3,7 @@ name = "bytey_derive"
 homepage = "https://github.com/Stefanowhb/bytey"
 repository = "https://github.com/Stefanowhb/bytey"
 version = "0.3.0"
-edition = "2021"
+edition = "2024"
 description = "Bytey derive macros, use Bytey instead"
 keywords = ["buffers", "io", "utility", "byte", "endian"]
 categories = ["data-structures", "encoding", "network-programming"]
@@ -13,9 +13,9 @@ license = "MIT"
 proc-macro = true
 
 [dependencies]
-quote = "1.0.37"
-syn = "2.0.77"
-proc-macro2 = "1.0.86"
+quote = "1.0.40"
+syn = "2.0.101"
+proc-macro2 = "1.0.95"
 
 [dev-dependencies]
 bytey = { path = "../bytey" }

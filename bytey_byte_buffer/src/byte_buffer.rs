@@ -272,11 +272,13 @@ impl ByteBuffer {
     pub unsafe fn write_slice_unchecked(&mut self, source: &[u8]) -> &mut Self {
         let source_length = source.len();
 
-        ptr::copy_nonoverlapping(
-            source.as_ptr(),
-            self.pointer.as_ptr().add(self.cursor),
-            source_length,
-        );
+        unsafe {
+            ptr::copy_nonoverlapping(
+                source.as_ptr(),
+                self.pointer.as_ptr().add(self.cursor),
+                source_length,
+            );
+        }
         self.cursor += source.len();
 
         self
@@ -415,7 +417,7 @@ impl ByteBuffer {
     /// }
     ///```
     pub unsafe fn read_slice_unchecked(&mut self, size: usize) -> &[u8] {
-        let ret = slice::from_raw_parts(self.pointer.as_ptr().add(self.cursor), size);
+        let ret = unsafe { slice::from_raw_parts(self.pointer.as_ptr().add(self.cursor), size) };
         self.cursor += size;
 
         ret
